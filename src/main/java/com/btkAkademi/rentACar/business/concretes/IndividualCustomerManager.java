@@ -1,15 +1,12 @@
 package com.btkAkademi.rentACar.business.concretes;
 
-import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
-import com.btkAkademi.rentACar.business.requests.IndividualCustomerRequest.CreateCorporateCustomerRequest;
-import com.btkAkademi.rentACar.business.requests.IndividualCustomerRequest.CreateIndividualCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateIndividualCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
-import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
 import com.btkAkademi.rentACar.dataAccess.abstracts.IndividualCustomerDao;
-import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
 import com.btkAkademi.rentACar.entities.concretes.IndividualCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +49,10 @@ public class IndividualCustomerManager implements IndividualCustomerService {
         var individualCustomer = this.modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
         this.individualCustomerDao.save(individualCustomer);
         return new SuccessResult(Messages.CUSTOMERSUCCESSFUL);
+    }
+
+    @Override
+    public Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+        return null;
     }
 }

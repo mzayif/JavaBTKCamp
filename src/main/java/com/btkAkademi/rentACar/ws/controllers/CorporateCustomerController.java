@@ -1,7 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
-import com.btkAkademi.rentACar.business.requests.IndividualCustomerRequest.CreateCorporateCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
 import org.springframework.http.ResponseEntity;

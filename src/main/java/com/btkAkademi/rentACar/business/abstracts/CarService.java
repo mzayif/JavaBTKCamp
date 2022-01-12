@@ -11,6 +11,6 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 public interface CarService {
 	DataResult<List<CarListDto>> getAll();
 	
-	Result addCar(CreateCarRequest carCreateDto);
-	Result updateCar(UpdateCarRequest updateCarRequest);
+	Result add(CreateCarRequest carCreateDto);
+	Result update(UpdateCarRequest updateCarRequest);
 }

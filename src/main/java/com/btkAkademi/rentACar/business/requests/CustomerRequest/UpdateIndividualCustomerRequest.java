@@ -1,17 +1,16 @@
-package com.btkAkademi.rentACar.business.requests.IndividualCustomerRequest;
+package com.btkAkademi.rentACar.business.requests.CustomerRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateIndividualCustomerRequest {
-
+public class UpdateIndividualCustomerRequest {
+    private int id;
     private String email;
     private String password;
     private String firstName;

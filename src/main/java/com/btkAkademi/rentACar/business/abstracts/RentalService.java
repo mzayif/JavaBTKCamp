@@ -12,7 +12,6 @@ public interface RentalService {
     DataResult<List<RentalListDto>> getAll();
 
     Result add(CreateRentalRequest rentalRequest);
-
     Result update(UpdateRentalRequest updateRentalRequest);
 }
 

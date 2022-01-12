@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.btkAkademi.rentACar.business.requests.IRequest;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateColorRequest {
+public class UpdateColorRequest implements IRequest {
 	private int id;
 	
 	@NotBlank

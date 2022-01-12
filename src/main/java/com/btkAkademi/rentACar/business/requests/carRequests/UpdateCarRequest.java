@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.business.requests.carRequests;
 
+import com.btkAkademi.rentACar.business.requests.IRequest;
 import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.Color;
 
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateCarRequest {
+public class UpdateCarRequest implements IRequest {
 
 	private int id;
 	private double dailyPrice;

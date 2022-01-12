@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.btkAkademi.rentACar.business.abstracts.RentalService;
-import com.btkAkademi.rentACar.business.dtos.RentalListDto;
-import com.btkAkademi.rentACar.business.requests.rentalRequests.CreateRentalRequest;
-import com.btkAkademi.rentACar.business.requests.rentalRequests.UpdateRentalRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +33,14 @@ public class ColorsController {
 	
 	@PostMapping("add")
 	public ResponseEntity<?> add(@RequestBody @Valid CreateColorRequest createColorRequest){
-		var result = colorService.addColor(createColorRequest);
+		var result = colorService.add(createColorRequest);
 		
 		return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
 	}
 	
 	@PostMapping("update")
 	public ResponseEntity<?> update(@RequestBody @Valid UpdateColorRequest updateColorRequest){
-		var result = colorService.updateColor(updateColorRequest);
+		var result = colorService.update(updateColorRequest);
 		
 		return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
 	}

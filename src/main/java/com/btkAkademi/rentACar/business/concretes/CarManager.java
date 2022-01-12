@@ -3,6 +3,8 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.btkAkademi.rentACar.business.abstracts.BrandService;
+import com.btkAkademi.rentACar.business.abstracts.ColorService;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarService;
@@ -25,38 +27,50 @@ public class CarManager implements CarService {
 
 	private final CarDao carDao;
 	private final ModelMapperService modelMapperService;
+	private final BrandService brandService;
+	private final ColorService colorService;
 
-	public CarManager(CarDao carDao, ModelMapperService modelMapperService) {
+	public CarManager(CarDao carDao, ModelMapperService modelMapperService, BrandService brandService, ColorService colorService) {
 		this.carDao = carDao;
 		this.modelMapperService = modelMapperService;
+		this.brandService = brandService;
+		this.colorService = colorService;
+	}
+
+	private Result checkIfCarExists(int id) {
+		return this.carDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
 	}
 
 	public DataResult<List<CarListDto>> getAll() {
 		var carList = this.carDao.findAll();
-		List<CarListDto> response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class))
-				.collect(Collectors.toList());
-		return new SuccessDataResult<List<CarListDto>>(response);
+		var response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<CarListDto>>(response,Messages.SUCCEED);
 	}
 
 	@Override
-	public Result addCar(CreateCarRequest carCreateDto) {
+	public Result add(CreateCarRequest carCreateDto) {
 		var car = this.modelMapperService.forRequest().map(carCreateDto, Car.class);
 		this.carDao.save(car);
-		return new SuccessResult(Messages.CARADDSUCCESSFUL);
+		return new SuccessResult(Messages.CREATED);
 	}
 
 	@Override
-	public Result updateCar(UpdateCarRequest updateCarRequest) {
+	public Result update(UpdateCarRequest updateCarRequest) {
 
-		if (this.carDao.findById(updateCarRequest.getId()).isEmpty()) {
-			return new ErrorResult(Messages.CARNOTFOUND);
+		var result= BusinessRules.run(
+				checkIfCarExists(updateCarRequest.getId()),
+				this.brandService.checkIfBrandExists(updateCarRequest.getBrand().getId()),
+				this.colorService.checkIfColorExists(updateCarRequest.getBrand().getId())
+		);
+
+		if(result != null) {
+			return result;
 		}
 
 		var updatedCar = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carDao.save(updatedCar);
-		
-		
-		// TODO update işlemi yaz.
+
+//		var car =this.carDao.findById(updateCarRequest.getId()).get();
 //		car.setDailyPrice(updateCarRequest.getDailyPrice());
 //		car.setDescription(updateCarRequest.getDescription());
 //		car.setFindexScore(updateCarRequest.getFindexScore());
@@ -65,8 +79,7 @@ public class CarManager implements CarService {
 //		car.setBrand(updateCarRequest.getBrand());
 //		car.setColor(updateCarRequest.getColor());
 //		this.carDao.save(car);
-		return new SuccessResult(Messages.CARUPDATED);
-
+		return new SuccessResult(Messages.UPDATED);
 	}
 
 }

@@ -89,4 +89,9 @@ public class BrandManager implements BrandService {
 		//this.brandDao.updateBrandNameById(updateBrandRequest.getName(), updateBrandRequest.getId());
 		return new SuccessResult(Messages.BRANDUPDATED);
 	}
+
+	@Override
+	public Result checkIfBrandExists(int id) {
+		return this.brandDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
+	}
 }

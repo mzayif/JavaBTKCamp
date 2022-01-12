@@ -14,4 +14,6 @@ public interface BrandService {
 	Result add(CreateBrandRequest brandCreateDto);
 	
 	Result update(UpdateBrandRequest updateBrandRequest);
+
+	Result checkIfBrandExists(int id);
 }

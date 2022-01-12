@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.business.requests.rentalRequests;
 
+import com.btkAkademi.rentACar.business.requests.IRequest;
 import com.btkAkademi.rentACar.entities.concretes.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +11,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateRentalRequest {
+public class UpdateRentalRequest implements IRequest {
+
     private int id;
     private LocalDate rentDate;
     private LocalDate returnDate;

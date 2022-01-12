@@ -28,69 +28,74 @@ import com.btkAkademi.rentACar.dataAccess.abstracts.ColorDao;
 import com.btkAkademi.rentACar.entities.concretes.Color;
 
 @Service
-public class ColorManager implements ColorService{
-	private final ColorDao colorDao;
-	private final ModelMapperService modelMapperService;
-	
-	@Autowired
-	public ColorManager(ColorDao colorDao, ModelMapperService modelMapperService) {
-		this.colorDao = colorDao;
-		this.modelMapperService = modelMapperService;
-	}
+public class ColorManager implements ColorService {
+    private final ColorDao colorDao;
+    private final ModelMapperService modelMapperService;
+
+    @Autowired
+    public ColorManager(ColorDao colorDao, ModelMapperService modelMapperService) {
+        this.colorDao = colorDao;
+        this.modelMapperService = modelMapperService;
+    }
 
 
-	public DataResult<List<ColorListDto>> getAll() {
-		var colorList = this.colorDao.findAll();
-		List<ColorListDto> response = colorList.stream()
-			.map( color -> modelMapperService.forDto()
-			.map(color, ColorListDto.class) )
-			.collect(Collectors.toList() );
-		return new SuccessDataResult<List<ColorListDto>>(response);
-	}
-	
-	public Result addColor(CreateColorRequest createColorRequest) {		
-		
-		var result = BusinessRules.run(checkIfColorNameExists(createColorRequest.getName()));
+    public DataResult<List<ColorListDto>> getAll() {
+        var colorList = this.colorDao.findAll();
+        List<ColorListDto> response = colorList.stream()
+                .map(color -> modelMapperService.forDto()
+                        .map(color, ColorListDto.class))
+                .collect(Collectors.toList());
+        return new SuccessDataResult<List<ColorListDto>>(response);
+    }
 
-		if (result != null) {
-			return result;
-		}
-		
-		var color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
-		this.colorDao.save(color);					
-		return new SuccessResult(Messages.COLORADDSUCCESSFUL);
-	}
+    public Result add(CreateColorRequest createColorRequest) {
+
+        var result = BusinessRules.run(checkIfColorNameExists(createColorRequest.getName()));
+
+        if (result != null) {
+            return result;
+        }
+
+        var color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
+        this.colorDao.save(color);
+        return new SuccessResult(Messages.COLORADDSUCCESSFUL);
+    }
 
 
-	@Override
-	public Result updateColor(UpdateColorRequest updateColorRequest) {
-		var color = this.colorDao.findById(updateColorRequest.getId());
+    @Override
+    public Result update(UpdateColorRequest updateColorRequest) {
+        var color = this.colorDao.findById(updateColorRequest.getId());
 
-		if (color.isEmpty()) {
-			return new ErrorResult(Messages.COLORNOTFOUND);
-		} else if (updateColorRequest.getName() == color.get().getName()) {
-			return new ErrorResult(Messages.NOUPDATEISSUED);
-		}
-		var result = BusinessRules.run(checkIfColorNameExists(updateColorRequest.getName()));
+        if (color.isEmpty()) {
+            return new ErrorResult(Messages.COLORNOTFOUND);
+        } else if (updateColorRequest.getName() == color.get().getName()) {
+            return new ErrorResult(Messages.NOUPDATEISSUED);
+        }
+        var result = BusinessRules.run(checkIfColorNameExists(updateColorRequest.getName()));
 
-		if (result != null) {
-			return result;
-			//bir değişiklik silelin bunu
-			
-		}
-		// TODO update işlemi yaz.
-		color.get().setName(updateColorRequest.getName());
-		this.colorDao.save(color.get());
-		return new SuccessResult(Messages.COLORUPDATED);
+        if (result != null) {
+            return result;
+            //bir değişiklik silelin bunu
 
-	}
-	
-	private Result checkIfColorNameExists(String name) {
-		
-		if(!this.colorDao.findByName(name).isPresent()) {
-			return new SuccessResult();
-		}
-		return new ErrorResult(Messages.COLORNAMEEXISTS);
-	}
+        }
+        // TODO update işlemi yaz.
+        color.get().setName(updateColorRequest.getName());
+        this.colorDao.save(color.get());
+        return new SuccessResult(Messages.COLORUPDATED);
+
+    }
+
+    @Override
+    public Result checkIfColorExists(int id) {
+        return this.colorDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
+    }
+
+    private Result checkIfColorNameExists(String name) {
+
+        if (!this.colorDao.findByName(name).isPresent()) {
+            return new SuccessResult();
+        }
+        return new ErrorResult(Messages.COLORNAMEEXISTS);
+    }
 }
 
