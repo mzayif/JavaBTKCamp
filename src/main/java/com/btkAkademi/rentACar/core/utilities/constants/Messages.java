@@ -19,6 +19,13 @@ public class Messages {
 	public static final String COLORUPDATED = "color.updated";
 	public static final String CARNOTFOUND = "car.notfound";
 	public static final String CARUPDATED = "car.updated";
-	
-	
+
+
+    public static final String CUSTOMERSUCCESSFUL = "customer.added";
+	public static final String CUSTOMERALREADYEXISTS = "customer.name.exists";
+	public static final String CUSTOMERISMINOR = "customer.isMinor";
+	public static final String RENTALADDSUCCESSFUL = "rental.added";
+    public static final String RETURNDATECANNOTBESMALL = "return.date.cannot.be.small";
+	public static final String RETURNKILOMETERCANNOTBESMALL =  "return.kilometer.cannot.be.small";
+	public static final String CUSTOMERNOTFOUND = "customer.notfound";
 }

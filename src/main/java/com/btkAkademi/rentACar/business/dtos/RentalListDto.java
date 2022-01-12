@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorListDto implements IDto{
-	private int id;
-	private String name;
+public class RentalListDto implements IDto {
+    private int id;
+    private String name;
 }
-
