@@ -69,6 +69,7 @@ public class ColorManager implements ColorService{
 
 		if (result != null) {
 			return result;
+			//bir değişiklik silelin bunu
 			
 		}
 		// TODO update işlemi yaz.
