@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.btkAkademi.rentACar.business.abstracts.BrandService;
-import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,12 @@ import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CarDao;
 import com.btkAkademi.rentACar.entities.concretes.Car;
 
+
+/*
+*   Araç Kayıt Gereksinimleri
+*       1- Araç kayıt ve güncelleme sırasında Brand in varlığı kontrol edilmeli
+*       1- Araç kayıt ve güncelleme sırasında Color in varlığı kontrol edilmeli
+* */
 @Service
 public class CarManager implements CarService {
 

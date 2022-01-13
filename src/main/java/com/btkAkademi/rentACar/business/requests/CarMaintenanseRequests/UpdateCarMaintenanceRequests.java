@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UpdateCarMaintenanceRequests {
     private int id;
+    private LocalDate sendMaintenanceDate;
     private LocalDate returnMaintenanceDate;
 }
 

@@ -18,6 +18,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ *   Araç Bakıma Gönderme gereksinimleri
+ *      1- Bakıma gönderilecek aracın varlığı kontrol eidlmeli
+ *      2- Bakıma göndeirlecek aracın kirada olmadığı kontrol edilmeli
+ *      3- Bakıma gönderilecek araç bakımda olmamalı
+ *      4- Kaydederken Bakımdna dönüş tarihi null/boş kaydedilir.
+ *      5- Güncellerken  bakımdan dönüş bilgisi güncellenir.
+ *      6- Aracın bakımda olup olmadığı kontrol edilmeli
+ * */
 @Service
 public class CarMaintenanceManager implements CarMaintenanceService {
     private final CarMaintenanceDao carMaintenanceDao;
@@ -48,7 +57,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
             return new ErrorResult(Messages.CARNOTFOUND);
 
         var result = BusinessRules.run(
-                this.rentalService.isCarRented(createCarMaintenanceRequests.getCarId())
+                this.rentalService.isCarRented(createCarMaintenanceRequests.getCarId()),
+                isCarMaintenance(createCarMaintenanceRequests.getCarId())
         );
         if (result != null) {
             return result;
@@ -72,6 +82,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 
         this.carService.returnMaintenance(carMaintenance.getCar().getId());
+        carMaintenance.setSendMaintenanceDate(updateCarMaintenanceRequests.getSendMaintenanceDate());
         carMaintenance.setReturnMaintenanceDate(updateCarMaintenanceRequests.getReturnMaintenanceDate());
         this.carMaintenanceDao.save(carMaintenance);
 

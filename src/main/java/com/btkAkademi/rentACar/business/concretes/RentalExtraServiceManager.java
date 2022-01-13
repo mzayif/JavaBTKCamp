@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+* Ekstra Ürün Kiralama Servisi Gereksinimleri
+*   1- Kayıt yapılırken bağlı olduğu Rental kaydı ve ekstra kiralanabilir ürünün varlığı kontol edilmeli
+*   2- Güncellemede ürünün varlığı kontrol edilmeli
+* */
 @Service
 public class RentalExtraServiceManager implements RentalExtraServiceService {
 

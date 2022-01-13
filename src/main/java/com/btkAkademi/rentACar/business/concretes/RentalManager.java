@@ -17,6 +17,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/*
+*   Araç Kiralama Servisi Gereksinimleri
+*
+*       1- Müşterinin varlığı kontrol edilmeli
+*       2- Aracın varlığı kontrol edilmeli
+*       3- Şehirlerin varlığı kontrol edilmeli
+*       4- Aracın bakımda olmadığı kontrol edilmeli
+*       5- Aracın başka biryerde kirada olmadığı kontrol edilmeli
+*       6- Dönüş tarihi kira başlama tarihinden küçük olmamalı
+*       7- Güncellemede dönüş kilometresi başlangıç kilometresinden küçük olmamalı
+* */
 @Service
 public class RentalManager implements RentalService {
     private final RentalDao rentalDao;
@@ -74,7 +86,7 @@ public class RentalManager implements RentalService {
                 this.customerService.checkIfCustomer(createRentalRequest.getCustomerId()),
                 this.carService.checkIfCarExists(createRentalRequest.getCarId()),
                 this.carService.checkIfCarRental(createRentalRequest.getCarId()),
-                this.cityService.checkIfCityExists(createRentalRequest.getPicUpCityId()),
+                this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId()),
                 this.carMaintenanceService.isCarMaintenance(createRentalRequest.getCarId())
         );
 
@@ -82,7 +94,7 @@ public class RentalManager implements RentalService {
             return rules;
         }
 
-        if (createRentalRequest.getReturnCityId() > 0 && !this.cityService.checkIfCityExists(createRentalRequest.getPicUpCityId()).isSuccess())
+        if (createRentalRequest.getReturnCityId() > 0 && !this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId()).isSuccess())
             return new ErrorResult(Messages.CITYNOTFOUND);
 
         var rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
