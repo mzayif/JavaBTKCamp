@@ -1,17 +1,13 @@
 package com.btkAkademi.rentACar.entities.concretes;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name="cars")
@@ -38,7 +34,9 @@ public class Car {
 	
 	@Column(name = "kilometer")
 	private int kilometer;
-	
+
+	@Column(name = "is_maintenance")
+	private boolean isMaintenance;
 	
 	@ManyToOne
 	@JoinColumn(name="brand_id")
@@ -47,6 +45,12 @@ public class Car {
 	@ManyToOne
 	@JoinColumn(name="color_id")
 	private Color color;
-	
-	
+
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "car")
+	private List<CarMaintenance> carMaintenances;
+	@JsonIgnore
+	@OneToMany(mappedBy = "car")
+	private List<Rental> rentals;
 }

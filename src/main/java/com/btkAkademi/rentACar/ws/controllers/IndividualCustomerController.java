@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
+import com.btkAkademi.rentACar.business.dtos.IndividualCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.IndividualCustomerDao;
@@ -21,7 +22,7 @@ public class IndividualCustomerController {
 
 
     @GetMapping("getall")
-    public ResponseEntity<DataResult<List<IndividualCustomerDao>>> getAll() {
+    public ResponseEntity<DataResult<List<IndividualCustomerListDto>>> getAll() {
         var result = individualCustomerService.getAll();
 
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);

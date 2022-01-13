@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.business.requests.rentalRequests;
 
 import com.btkAkademi.rentACar.business.requests.IRequest;
+import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +20,5 @@ public class UpdateRentalRequest implements IRequest {
     private int rentedKilometer;
     private int returnedKilometer;
     private Customer customer;
+    private Car car;
 }

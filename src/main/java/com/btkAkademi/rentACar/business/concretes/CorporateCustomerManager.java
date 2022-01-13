@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
+import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
@@ -25,10 +26,10 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 
     @Override
-    public DataResult<List<CorporateCustomerDao>> getAll() {
+    public DataResult<List<CorporateCustomerListDto>> getAll() {
         var corporateCustomers = this.corporateCustomerDao.findAll();
-        var response = corporateCustomers.stream().map(record -> modelMapperService.forDto().map(record, CorporateCustomerDao.class)).collect(Collectors.toList());
-        return new SuccessDataResult<List<CorporateCustomerDao>>(response);
+        var response = corporateCustomers.stream().map(record -> modelMapperService.forDto().map(record, CorporateCustomerListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<CorporateCustomerListDto>>(response);
     }
 
     @Override

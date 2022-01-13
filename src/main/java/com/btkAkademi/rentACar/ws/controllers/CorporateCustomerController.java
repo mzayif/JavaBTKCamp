@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
+import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
@@ -21,7 +22,7 @@ public class CorporateCustomerController {
 
 
     @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CorporateCustomerDao>>> getAll() {
+    public ResponseEntity<DataResult<List<CorporateCustomerListDto>>> getAll() {
         var result = corporateCustomerService.getAll();
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

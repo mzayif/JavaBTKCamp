@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
+import com.btkAkademi.rentACar.business.dtos.IndividualCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
@@ -29,11 +30,11 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 
 
     @Override
-    public DataResult<List<IndividualCustomerDao>> getAll() {
+    public DataResult<List<IndividualCustomerListDto>> getAll() {
         var individualCustomers = this.individualCustomerDao.findAll();
-        List<IndividualCustomerDao> response = individualCustomers.stream().map(IndividualCustomer -> modelMapperService.forDto().map(IndividualCustomer, IndividualCustomerDao.class))
+        List<IndividualCustomerListDto> response = individualCustomers.stream().map(IndividualCustomer -> modelMapperService.forDto().map(IndividualCustomer, IndividualCustomerListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<IndividualCustomerDao>>(response);
+        return new SuccessDataResult<List<IndividualCustomerListDto>>(response);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.business.abstracts;
 
+import com.btkAkademi.rentACar.business.dtos.IndividualCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface IndividualCustomerService {
 
-    DataResult<List<IndividualCustomerDao>> getAll();
+    DataResult<List<IndividualCustomerListDto>> getAll();
 
     Result add(CreateIndividualCustomerRequest createIndividualCustomerRequest);
     Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest);

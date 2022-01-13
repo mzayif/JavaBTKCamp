@@ -1,17 +1,17 @@
-package com.btkAkademi.rentACar.business.dtos;
+package com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests;
 
 import com.btkAkademi.rentACar.entities.concretes.Car;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BrandListDto implements IDto{
-	private int id;
-	private String name;
+public class UpdateCarMaintenanceRequests {
+    private int id;
+    private LocalDate returnMaintenanceDate;
 }
+

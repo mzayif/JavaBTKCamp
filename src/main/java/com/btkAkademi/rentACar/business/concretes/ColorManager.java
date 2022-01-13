@@ -3,12 +3,11 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.btkAkademi.rentACar.business.abstracts.RentalService;
-import com.btkAkademi.rentACar.business.dtos.RentalListDto;
-import com.btkAkademi.rentACar.business.requests.rentalRequests.CreateRentalRequest;
-import com.btkAkademi.rentACar.business.requests.rentalRequests.UpdateRentalRequest;
-import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
-import com.btkAkademi.rentACar.entities.concretes.Rental;
+import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
+import com.btkAkademi.rentACar.business.dtos.CarMaintenanceListDto;
+import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.CreateCarMaintenanceRequests;
+import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.UpdateCarMaintenanceRequests;
+import com.btkAkademi.rentACar.dataAccess.abstracts.CarMaintenanceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

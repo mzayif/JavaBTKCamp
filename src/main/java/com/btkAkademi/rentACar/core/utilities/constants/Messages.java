@@ -40,4 +40,6 @@ public class Messages {
 	public static final String RENTALADDSUCCESSFUL = "rental.added";
     public static final String RETURNDATECANNOTBESMALL = "return.date.cannot.be.small";
 	public static final String RETURNKILOMETERCANNOTBESMALL =  "return.kilometer.cannot.be.small";
+	public static final String CARALREADYMAINTENANCE = "Car already maintenance";
+    public static final String NOTAVAILABLE = "Car Not Available";
 }
