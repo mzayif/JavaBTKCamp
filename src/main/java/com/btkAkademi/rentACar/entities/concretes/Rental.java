@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,12 +27,25 @@ public class Rental {
     @Column(name = "return_kilometer")
     private int returnedKilometer;
 
+
+    @ManyToOne
+    @JoinColumn(name = "pic_up_city_id")
+    private City PicUpCity;
+
+    @ManyToOne
+    @JoinColumn(name = "return_up_city_id")
+    private City ReturnCity;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+
+
+    @OneToMany(mappedBy = "rental")
+    private List<RentalExtraService> rentalExtraServices;
 }

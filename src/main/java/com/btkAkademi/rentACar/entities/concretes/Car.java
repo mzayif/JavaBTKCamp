@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table(name="cars")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name="cars")
 public class Car {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name = "daily_price")
 	private double dailyPrice;
 	
@@ -35,9 +35,9 @@ public class Car {
 	@Column(name = "kilometer")
 	private int kilometer;
 
-	@Column(name = "is_maintenance")
-	private boolean isMaintenance;
-	
+//	@Column(name = "is_maintenance")
+//	private boolean isMaintenance;
+
 	@ManyToOne
 	@JoinColumn(name="brand_id")
 	private Brand brand;
@@ -53,4 +53,7 @@ public class Car {
 	@JsonIgnore
 	@OneToMany(mappedBy = "car")
 	private List<Rental> rentals;
+	@JsonIgnore
+	@OneToMany(mappedBy = "car")
+	private List<CarDamage> carDamages;
 }

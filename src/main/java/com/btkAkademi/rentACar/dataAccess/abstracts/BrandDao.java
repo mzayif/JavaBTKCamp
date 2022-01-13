@@ -2,6 +2,9 @@ package com.btkAkademi.rentACar.dataAccess.abstracts;
 
 import java.util.Optional;
 
+import com.btkAkademi.rentACar.entities.concretes.AdditionalService;
+import com.btkAkademi.rentACar.entities.concretes.City;
+import com.btkAkademi.rentACar.entities.concretes.RentalExtraService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +24,5 @@ public interface BrandDao extends JpaRepository<Brand, Integer>{
 //	@Query("update Brand b set b.name = :brand.name,  where b.id = :brand.id")
 //	void updateBrandById(@Param("brand")Brand brand);
 //	
-}	
+}
+

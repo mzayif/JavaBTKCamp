@@ -2,16 +2,17 @@ package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
 import com.btkAkademi.rentACar.business.abstracts.CarService;
+import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.dtos.CarMaintenanceListDto;
 import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.CreateCarMaintenanceRequests;
 import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.UpdateCarMaintenanceRequests;
+import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CarMaintenanceDao;
-import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
-import org.aspectj.bridge.Message;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +22,13 @@ import java.util.stream.Collectors;
 public class CarMaintenanceManager implements CarMaintenanceService {
     private final CarMaintenanceDao carMaintenanceDao;
     private final ModelMapperService modelMapperService;
+    private final RentalService rentalService;
     private final CarService carService;
 
-    public CarMaintenanceManager(CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService, CarService carService) {
+    public CarMaintenanceManager(CarMaintenanceDao carMaintenanceDao, ModelMapperService modelMapperService, @Lazy RentalService rentalService, CarService carService) {
         this.carMaintenanceDao = carMaintenanceDao;
         this.modelMapperService = modelMapperService;
+        this.rentalService = rentalService;
         this.carService = carService;
     }
 
@@ -39,13 +42,20 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
     @Override
     public Result add(CreateCarMaintenanceRequests createCarMaintenanceRequests) {
-        if (createCarMaintenanceRequests.getCar() == null)
-            return new ErrorResult(Messages.CARNOTFOUND);
-        var checkCarResult = this.carService.checkIfCarExists(createCarMaintenanceRequests.getCar().getId());
+
+        var checkCarResult = this.carService.checkIfCarExists(createCarMaintenanceRequests.getCarId());
         if (!checkCarResult.isSuccess())
             return new ErrorResult(Messages.CARNOTFOUND);
 
-        this.carService.sendMaintenance(createCarMaintenanceRequests.getCar().getId());
+        var result = BusinessRules.run(
+                this.rentalService.isCarRented(createCarMaintenanceRequests.getCarId())
+        );
+        if (result != null) {
+            return result;
+        }
+
+
+        this.carService.sendMaintenance(createCarMaintenanceRequests.getCarId());
 
         var carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequests, CarMaintenance.class);
         this.carMaintenanceDao.save(carMaintenance);
@@ -59,6 +69,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         if (carMaintenance == null) {
             return new ErrorResult(Messages.NOTFOUND);
         }
+
 
         this.carService.returnMaintenance(carMaintenance.getCar().getId());
         carMaintenance.setReturnMaintenanceDate(updateCarMaintenanceRequests.getReturnMaintenanceDate());

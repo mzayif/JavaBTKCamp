@@ -1,22 +1,19 @@
 package com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests;
 
-import com.btkAkademi.rentACar.entities.concretes.Car;
+import com.btkAkademi.rentACar.business.requests.IRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCarMaintenanceRequests {
+public class CreateCarMaintenanceRequests implements IRequest {
+
     private LocalDate sendMaintenanceDate;
-    private Car car;
+    private int carId;
 }
 

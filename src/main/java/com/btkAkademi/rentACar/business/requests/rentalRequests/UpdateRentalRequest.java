@@ -19,6 +19,7 @@ public class UpdateRentalRequest implements IRequest {
     private LocalDate returnDate;
     private int rentedKilometer;
     private int returnedKilometer;
-    private Customer customer;
-    private Car car;
+    private int customerId;
+    private int carId;
+    private int returnCityId;
 }

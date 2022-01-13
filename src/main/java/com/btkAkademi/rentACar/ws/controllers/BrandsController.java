@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.btkAkademi.rentACar.business.abstracts.CityService;
+import com.btkAkademi.rentACar.business.dtos.CityListDto;
+import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
+import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +43,11 @@ public class BrandsController {
 	}
 
 	@PostMapping("update")
-	public ResponseEntity<?> udate(@RequestBody @Valid UpdateBrandRequest updateBrandRequest) {
+	public ResponseEntity<?> update(@RequestBody @Valid UpdateBrandRequest updateBrandRequest) {
 
 		var result = brandService.update(updateBrandRequest);
 		
 		return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
 	}
 }
+

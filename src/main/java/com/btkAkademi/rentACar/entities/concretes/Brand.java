@@ -31,3 +31,4 @@ public class Brand{
 	@OneToMany(mappedBy = "brand")
 	private List<Car> cars;
 }
+

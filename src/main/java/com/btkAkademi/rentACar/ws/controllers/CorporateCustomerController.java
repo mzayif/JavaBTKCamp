@@ -3,11 +3,14 @@ package com.btkAkademi.rentACar.ws.controllers;
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
 import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateCorporateCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateCorporateCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,15 +31,15 @@ public class CorporateCustomerController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> getAll(@RequestBody CreateCorporateCustomerRequest createCorporateCustomerRequest) {
+    public ResponseEntity<?> add(@RequestBody CreateCorporateCustomerRequest createCorporateCustomerRequest) {
         var result = corporateCustomerService.add(createCorporateCustomerRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-//    @PostMapping("update")
-//    public ResponseEntity<?> udate(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
-//
-//        var result = individualCustomerService.updateCar(updateCarRequest);
-//        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
-//    }
+    @PostMapping("update")
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
+
+        var result = corporateCustomerService.update(updateCorporateCustomerRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
+    }
 }

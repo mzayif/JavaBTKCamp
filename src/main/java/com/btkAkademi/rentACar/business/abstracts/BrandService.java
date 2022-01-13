@@ -7,13 +7,16 @@ import com.btkAkademi.rentACar.business.requests.brandRequests.CreateBrandReques
 import com.btkAkademi.rentACar.business.requests.brandRequests.UpdateBrandRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 
 public interface BrandService {
-	DataResult<List<BrandListDto>> getAll();
-	
 	Result add(CreateBrandRequest brandCreateDto);
 	
 	Result update(UpdateBrandRequest updateBrandRequest);
 
 	Result checkIfBrandExists(int id);
+
+
+	DataResult<List<BrandListDto>> getAll();
+	DataResult<Brand> getById(int brandId);
 }

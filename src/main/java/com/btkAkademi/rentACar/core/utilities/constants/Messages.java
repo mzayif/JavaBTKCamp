@@ -42,4 +42,7 @@ public class Messages {
 	public static final String RETURNKILOMETERCANNOTBESMALL =  "return.kilometer.cannot.be.small";
 	public static final String CARALREADYMAINTENANCE = "Car already maintenance";
     public static final String NOTAVAILABLE = "Car Not Available";
+	public static final String CARISRENTAL = "Car is rental";
+    public static final String CITYNOTFOUND = "City not found";
+    public static final String RENTALNOTFOUND = "Rental not found";
 }

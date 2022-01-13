@@ -38,12 +38,12 @@ public class CarsController {
 	}
 	
 	@PostMapping("add")
-	public ResponseEntity<?> getAll(@RequestBody CreateCarRequest carCreateDto) {
+	public ResponseEntity<?> add(@RequestBody CreateCarRequest carCreateDto) {
 		return ResponseEntity.ok(carService.add(carCreateDto));
 	}
 
 	@PostMapping("update")
-	public ResponseEntity<?> udate(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
+	public ResponseEntity<?> update(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
 
 		var result = carService.update(updateCarRequest);
 		return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);

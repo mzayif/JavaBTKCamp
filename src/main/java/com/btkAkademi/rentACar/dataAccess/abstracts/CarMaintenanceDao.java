@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.dataAccess.abstracts;
 
 import com.btkAkademi.rentACar.entities.concretes.Brand;
+import com.btkAkademi.rentACar.entities.concretes.CarDamage;
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,7 @@ import java.util.Optional;
 public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer> {
     @Query("from CarMaintenance b  where b.returnMaintenanceDate is null and b.car.id = ?1")
     Optional<List<CarMaintenance>> checkCarMaintenance(int carId);
+
+    CarMaintenance findByCarIdAndAndReturnMaintenanceDateIsNull(int CarId);
 }
+
