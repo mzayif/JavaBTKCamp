@@ -20,3 +20,4 @@ public interface BrandService {
 	DataResult<List<BrandListDto>> getAll();
 	DataResult<Brand> getById(int brandId);
 }
+

@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*
-* Ekstra Ürün Kiralama Servisi Gereksinimleri
-*   1- Kayıt yapılırken bağlı olduğu Rental kaydı ve ekstra kiralanabilir ürünün varlığı kontol edilmeli
-*   2- Güncellemede ürünün varlığı kontrol edilmeli
-* */
+ * Ekstra Ürün Kiralama Servisi Gereksinimleri
+ *   1- Kayıt yapılırken bağlı olduğu Rental kaydı ve ekstra kiralanabilir ürünün varlığı kontol edilmeli
+ *   2- Güncellemede ürünün varlığı kontrol edilmeli
+ * */
 @Service
 public class RentalExtraServiceManager implements RentalExtraServiceService {
 
@@ -107,5 +107,11 @@ public class RentalExtraServiceManager implements RentalExtraServiceService {
     public DataResult<RentalExtraService> getById(int id) {
         var rentalExtraService = this.extraServiceDao.findById(id);
         return rentalExtraService.isPresent() ? new SuccessDataResult<RentalExtraService>(rentalExtraService.get()) : new ErrorDataResult<RentalExtraService>(Messages.NOTFOUND);
+    }
+
+    @Override
+    public DataResult<List<RentalExtraService>> getByRentalId(int rentalId) {
+        var serviceDaoAll = this.extraServiceDao.findAllByRentalId(rentalId);
+        return new SuccessDataResult<List<RentalExtraService>>(serviceDaoAll.get());
     }
 }

@@ -1,11 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
-import com.btkAkademi.rentACar.business.abstracts.CityService;
 import com.btkAkademi.rentACar.business.abstracts.PaymentService;
-import com.btkAkademi.rentACar.business.dtos.CityListDto;
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
 import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
 import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -17,30 +13,36 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cities")
-public class CitiesController {
-    private final CityService cityService;
+@RequestMapping("api/payments")
+public class PaymentsController {
+    private final PaymentService paymentService;
 
     @Autowired
-    public CitiesController(CityService cityService) {
-        this.cityService = cityService;
+    public PaymentsController(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CityListDto>>> getAll() {
-        return ResponseEntity.ok(cityService.getAll());
+    public ResponseEntity<DataResult<List<PaymentListDto>>> getAll() {
+        return ResponseEntity.ok(paymentService.getAll());
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody @Valid CreateCityRequest createCityRequest) {
-        var result = cityService.add(createCityRequest);
+    public ResponseEntity<?> add(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+        var result = paymentService.add(createPaymentRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
 
     }
 
     @PostMapping("update")
-    public ResponseEntity<?> update(@RequestBody @Valid UpdateCityRequest updateCityRequest) {
-        var result = cityService.update(updateCityRequest);
+    public ResponseEntity<?> update(@RequestBody @Valid UpdatePaymentRequest updatePaymentRequest) {
+        var result = paymentService.update(updatePaymentRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @PostMapping("payRental")
+    public ResponseEntity<?> update(int rentalId) {
+        var result = paymentService.payRental(rentalId);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

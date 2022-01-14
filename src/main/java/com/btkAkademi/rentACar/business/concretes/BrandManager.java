@@ -3,13 +3,14 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.btkAkademi.rentACar.business.abstracts.CityService;
-import com.btkAkademi.rentACar.business.dtos.CityListDto;
-import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
+import com.btkAkademi.rentACar.business.abstracts.PaymentService;
+import com.btkAkademi.rentACar.business.abstracts.RentalService;
+import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
+import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.results.*;
-import com.btkAkademi.rentACar.dataAccess.abstracts.CityDao;
-import com.btkAkademi.rentACar.entities.concretes.City;
+import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
+import com.btkAkademi.rentACar.entities.concretes.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

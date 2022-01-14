@@ -45,4 +45,5 @@ public class Messages {
 	public static final String CARISRENTAL = "Car is rental";
     public static final String CITYNOTFOUND = "City not found";
     public static final String RENTALNOTFOUND = "Rental not found";
+    public static final String ALREADYPAYED = "Rental fee already paid";
 }

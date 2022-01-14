@@ -11,13 +11,11 @@ import java.util.List;
 
 public interface RentalExtraServiceService {
     Result add(CreateRentalExtraServiceRequest createRentalExtraServiceRequest);
-
     Result update(UpdateRentalExtraServiceRequest updateRentalExtraRequest);
-
     Result checkIfRentalExtraServiceExists(int id);
 
 
     DataResult<List<RentalExtraServiceListDto>> getAll();
-
     DataResult<RentalExtraService> getById(int id);
+    DataResult<List<RentalExtraService>> getByRentalId(int rentalId);
 }
