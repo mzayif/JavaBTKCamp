@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import com.btkAkademi.rentACar.business.abstracts.BrandService;
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarService;
@@ -124,6 +126,15 @@ public class CarManager implements CarService {
         var carList = this.carDao.findAll();
         var response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarListDto>>(response, Messages.SUCCEED);
+    }
+
+    @Override
+    public DataResult<List<CarListDto>> getPageable(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        var carList = this.carDao.findAll(pageable).getContent();
+        var response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<CarListDto>>(response, Messages.SUCCEED);
+
     }
 
     @Override

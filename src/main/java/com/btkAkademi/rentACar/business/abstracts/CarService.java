@@ -22,6 +22,7 @@ public interface CarService {
 	Result checkIfCarRental(int id);
 
 	DataResult<List<CarListDto>> getAll();
+	DataResult<List<CarListDto>> getPageable(int page, int pageSize);
 	DataResult<Car> getById(int id);
 
 }
