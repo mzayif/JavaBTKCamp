@@ -12,11 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name="car_maintenances")
-public class CarMaintenance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+public class CarMaintenance extends BaseEntity {
 
     @Column(name = "rent_maintenance_date")
     private LocalDate sendMaintenanceDate;

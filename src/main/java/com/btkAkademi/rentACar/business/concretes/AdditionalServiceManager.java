@@ -2,8 +2,8 @@ package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.AdditionalServiceService;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
-import com.btkAkademi.rentACar.business.requests.AdditionalServiceRequests.CreateAdditionalServiceRequest;
-import com.btkAkademi.rentACar.business.requests.AdditionalServiceRequests.UpdateAdditionalServiceRequest;
+import com.btkAkademi.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
+import com.btkAkademi.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -26,7 +26,6 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         this.modelMapperService = modelMapperService;
     }
 
-
     private Result checkIfCityExists(String name) {
         var additionalService = this.additionalServiceDao.findByServiceName(name);
         if (additionalService.isPresent()) {
@@ -34,6 +33,9 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         }
         return new SuccessResult();
     }
+
+
+
 
     @Override
     public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) {
@@ -71,6 +73,15 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         additionalService.get().setServicePrice(updateAdditionalServiceRequest.getServicePrice());
         this.additionalServiceDao.save(additionalService.get());
         return new SuccessResult(Messages.UPDATED);
+    }
+
+    @Override
+    public Result delete(int id) {
+        var brand = this.additionalServiceDao.findById(id);
+        if (!brand.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.additionalServiceDao.delete(brand.get());
+        return new SuccessResult(Messages.DELETED);
     }
 
 

@@ -1,14 +1,10 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
-import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
-import com.btkAkademi.rentACar.business.dtos.RentalExtraServiceListDto;
 import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequests.CreateRentalRequest;
 import com.btkAkademi.rentACar.business.requests.rentalRequests.UpdateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
-import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

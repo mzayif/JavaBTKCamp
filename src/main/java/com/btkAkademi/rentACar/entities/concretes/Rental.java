@@ -13,11 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "rentals")
-public class Rental {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+public class Rental extends BaseEntity  {
+
+
     @Column(name = "rent_date")
     private LocalDate rentDate;
     @Column(name = "return_date")

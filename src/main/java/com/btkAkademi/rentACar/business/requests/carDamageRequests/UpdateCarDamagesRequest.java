@@ -1,4 +1,4 @@
-package com.btkAkademi.rentACar.business.requests.CarDamageRequests;
+package com.btkAkademi.rentACar.business.requests.carDamageRequests;
 
 import com.btkAkademi.rentACar.business.requests.IRequest;
 import lombok.AllArgsConstructor;

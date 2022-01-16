@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Table(name = "corporate_customers")
 @PrimaryKeyJoinColumn(name = "customer_id")
 public class CorporateCustomer extends Customer {
+
     @Column(name = "company_name")
     private String companyName;
     @Column(name = "tax_name")

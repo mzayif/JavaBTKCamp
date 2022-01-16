@@ -2,11 +2,9 @@ package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
 import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
-import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateCorporateCustomerRequest;
-import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateCorporateCustomerRequest;
-import com.btkAkademi.rentACar.business.requests.carRequests.UpdateCarRequest;
+import com.btkAkademi.rentACar.business.requests.customerRequests.CreateCorporateCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.customerRequests.UpdateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
-import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

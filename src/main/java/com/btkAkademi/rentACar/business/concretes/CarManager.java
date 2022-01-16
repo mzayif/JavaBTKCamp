@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.btkAkademi.rentACar.business.abstracts.BrandService;
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,19 +40,6 @@ public class CarManager implements CarService {
         this.modelMapperService = modelMapperService;
         this.brandService = brandService;
         this.colorService = colorService;
-    }
-
-    public Result checkIfCarExists(int id) {
-        return this.carDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
-    }
-
-    @Override
-    public Result checkIfCarRental(int id) {
-        var car = this.carDao.findById(id);
-        if (car.isEmpty())
-            return new ErrorResult(Messages.NOTAVAILABLE);
-
-        return new SuccessResult();
     }
 
     @Override
@@ -94,37 +82,35 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public Result sendMaintenance(int id) {
-//        var car = this.carDao.getById(id);
-//
-//        if (car == null) {
-//            return new ErrorResult(Messages.NOTFOUND);
-//        } else if (car.isMaintenance()) {
-//            return new ErrorResult(Messages.CARALREADYMAINTENANCE);
-//        }
-//        car.setMaintenance(true);
-//        this.carDao.save(car);
-        return new SuccessResult(Messages.SUCCEED);
+    public Result delete(int id) {
+        var car = this.carDao.findById(id);
+        if (!car.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.carDao.delete(car.get());
+        return new SuccessResult(Messages.DELETED);
     }
 
-    @Override
-    public Result returnMaintenance(int id) {
-//        var car = this.carDao.getById(id);
-//
-//        if (car == null) {
-//            return new ErrorResult(Messages.NOTFOUND);
-//        } else if (car.isMaintenance()) {
-//            return new ErrorResult(Messages.CARALREADYMAINTENANCE);
-//        }
-//        car.setMaintenance(false);
-//        this.carDao.save(car);
-        return new SuccessResult(Messages.SUCCEED);
+
+
+
+    public Result checkIfCarExists(int id) {
+        return this.carDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
+
+    public Result checkIfCarRental(int id) {
+        var car = this.carDao.findById(id);
+        if (car.isEmpty())
+            return new ErrorResult(Messages.NOTAVAILABLE);
+
+        return new SuccessResult();
+    }
+
+
 
 
     public DataResult<List<CarListDto>> getAll() {
         var carList = this.carDao.findAll();
-        var response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
+        var response = carList.stream().map(row -> modelMapperService.forDto().map(row, CarListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarListDto>>(response, Messages.SUCCEED);
     }
 
@@ -132,14 +118,15 @@ public class CarManager implements CarService {
     public DataResult<List<CarListDto>> getPageable(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo-1, pageSize);
         var carList = this.carDao.findAll(pageable).getContent();
-        var response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
+        var response = carList.stream().map(row -> modelMapperService.forDto().map(row, CarListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarListDto>>(response, Messages.SUCCEED);
 
     }
 
     @Override
     public DataResult<Car> getById(int id) {
-        return null;
+        var car = this.carDao.findById(id);
+        return car.isPresent() ? new SuccessDataResult<Car>(car.get()) : new ErrorDataResult<Car>();
     }
 
 

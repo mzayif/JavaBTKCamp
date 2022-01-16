@@ -1,4 +1,4 @@
-package com.btkAkademi.rentACar.business.requests.CityRequests;
+package com.btkAkademi.rentACar.business.requests.cityRequests;
 
 import com.btkAkademi.rentACar.business.requests.IRequest;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
@@ -13,7 +13,10 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCityRequest implements IRequest{
+public class UpdateCityRequest implements IRequest {
+	
+	private int id;
+	
 	@NotBlank
 	@NotNull
 	@Size(min=3, max=20, message = Messages.INVAILABLEBRANDSIZE)

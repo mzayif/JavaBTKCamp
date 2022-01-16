@@ -2,8 +2,8 @@ package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.RentalExtraServiceService;
 import com.btkAkademi.rentACar.business.dtos.RentalExtraServiceListDto;
-import com.btkAkademi.rentACar.business.requests.RentalExtraServiceRequests.CreateRentalExtraServiceRequest;
-import com.btkAkademi.rentACar.business.requests.RentalExtraServiceRequests.UpdateRentalExtraServiceRequest;
+import com.btkAkademi.rentACar.business.requests.rentalExtraServiceRequests.CreateRentalExtraServiceRequest;
+import com.btkAkademi.rentACar.business.requests.rentalExtraServiceRequests.UpdateRentalExtraServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

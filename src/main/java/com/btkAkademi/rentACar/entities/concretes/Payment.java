@@ -11,11 +11,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name="payments")
-public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+public class Payment extends BaseEntity  {
+
+
     @Column(name="total_price")
     private double totalPrice;
     @Column(name="is_paid")

@@ -1,15 +1,19 @@
-package com.btkAkademi.rentACar.business.requests.CarDamageRequests;
+package com.btkAkademi.rentACar.business.requests.carMaintenanseRequests;
 
 import com.btkAkademi.rentACar.business.requests.IRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCarDamagesRequest implements IRequest {
+public class CreateCarMaintenanceRequests implements IRequest {
 
+    private LocalDate sendMaintenanceDate;
     private int carId;
-    private String description;
 }
+

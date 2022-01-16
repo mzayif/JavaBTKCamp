@@ -1,15 +1,18 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.CityService;
+import com.btkAkademi.rentACar.business.dtos.CarListDto;
 import com.btkAkademi.rentACar.business.dtos.CityListDto;
-import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
+import com.btkAkademi.rentACar.business.requests.cityRequests.CreateCityRequest;
+import com.btkAkademi.rentACar.business.requests.cityRequests.UpdateCityRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CityDao;
 import com.btkAkademi.rentACar.entities.concretes.City;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +35,8 @@ public class CityManager implements CityService {
         }
         return new SuccessResult();
     }
+
+
 
     @Override
     public Result add(CreateCityRequest createCityRequest) {
@@ -71,11 +76,24 @@ public class CityManager implements CityService {
         return new SuccessResult(Messages.UPDATED);
     }
 
+    @Override
+    public Result delete(int id) {
+        var brand = this.cityDao.findById(id);
+        if (!brand.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.cityDao.delete(brand.get());
+        return new SuccessResult(Messages.DELETED);
+    }
+
+
+
 
     @Override
     public Result checkIfCityExists(int id) {
         return this.cityDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
+
+
 
     @Override
     public DataResult<List<CityListDto>> getAll() {
@@ -85,8 +103,17 @@ public class CityManager implements CityService {
     }
 
     @Override
+    public DataResult<List<CityListDto>> getPageable(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page-1, pageSize);
+        var cityList = this.cityDao.findAll(pageable).getContent();
+        var response = cityList.stream().map(row -> modelMapperService.forDto().map(row, CityListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<CityListDto>>(response, Messages.SUCCEED);
+    }
+
+    @Override
     public DataResult<City> getById(int id) {
         var city = this.cityDao.findById(id);
         return city.isPresent() ? new SuccessDataResult<City>(city.get()) : new ErrorDataResult<City>();
     }
 }
+

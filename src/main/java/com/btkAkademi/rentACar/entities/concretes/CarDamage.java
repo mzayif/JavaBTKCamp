@@ -11,11 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name="car_damages")
-public class CarDamage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+public class CarDamage extends BaseEntity {
 
     @Column(name="description")
     private String description;

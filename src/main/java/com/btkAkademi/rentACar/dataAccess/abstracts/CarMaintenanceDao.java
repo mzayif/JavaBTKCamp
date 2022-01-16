@@ -16,5 +16,7 @@ public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer
     Optional<List<CarMaintenance>> checkCarMaintenance(int carId);
 
     CarMaintenance findByCarIdAndAndReturnMaintenanceDateIsNull(int CarId);
+
+    Optional<List<CarMaintenance>> findAllByCarId(int carId);
 }
 

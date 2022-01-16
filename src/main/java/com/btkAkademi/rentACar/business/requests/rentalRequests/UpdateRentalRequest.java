@@ -1,8 +1,6 @@
 package com.btkAkademi.rentACar.business.requests.rentalRequests;
 
 import com.btkAkademi.rentACar.business.requests.IRequest;
-import com.btkAkademi.rentACar.entities.concretes.Car;
-import com.btkAkademi.rentACar.entities.concretes.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

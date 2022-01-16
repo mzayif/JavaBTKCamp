@@ -14,11 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="cars")
-public class Car {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private int id;
+public class Car extends BaseEntity {
 
 	@Column(name = "daily_price")
 	private double dailyPrice;

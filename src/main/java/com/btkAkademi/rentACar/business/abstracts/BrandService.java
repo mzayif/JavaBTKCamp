@@ -11,8 +11,8 @@ import com.btkAkademi.rentACar.entities.concretes.Brand;
 
 public interface BrandService {
 	Result add(CreateBrandRequest brandCreateDto);
-	
 	Result update(UpdateBrandRequest updateBrandRequest);
+	Result delete(int id);
 
 	Result checkIfBrandExists(int id);
 

@@ -3,14 +3,7 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.btkAkademi.rentACar.business.abstracts.PaymentService;
-import com.btkAkademi.rentACar.business.abstracts.RentalService;
-import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.results.*;
-import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
-import com.btkAkademi.rentACar.entities.concretes.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +35,16 @@ public class BrandManager implements BrandService {
         return new SuccessResult();
     }
 
+    private Result checkIfMaximumBrandNumberReached(int limit) {
+        if (this.brandDao.count() >= limit) {
+            return new ErrorResult(Messages.MAXIMUMBRANDNUMBERREACHED);
+        }
+        return new SuccessResult();
 
+    }
+
+
+    @Override
     public Result add(CreateBrandRequest createBrandRequest) {
         var brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 
@@ -55,14 +57,6 @@ public class BrandManager implements BrandService {
         this.brandDao.save(brand);
 
         return new SuccessResult(Messages.BRANDADDSUCCESSFUL);
-    }
-
-    private Result checkIfMaximumBrandNumberReached(int limit) {
-        if (this.brandDao.count() >= limit) {
-            return new ErrorResult(Messages.MAXIMUMBRANDNUMBERREACHED);
-        }
-        return new SuccessResult();
-
     }
 
     @Override
@@ -88,9 +82,24 @@ public class BrandManager implements BrandService {
     }
 
     @Override
+    public Result delete(int id) {
+        var brand = this.brandDao.findById(id);
+        if (!brand.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.brandDao.delete(brand.get());
+        return new SuccessResult(Messages.DELETED);
+    }
+
+
+
+
+    @Override
     public Result checkIfBrandExists(int id) {
         return this.brandDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
+
+
+
 
     @Override
     public DataResult<List<BrandListDto>> getAll() {

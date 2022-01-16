@@ -2,8 +2,8 @@ package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.paymentRequests.CreatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.paymentRequests.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +41,15 @@ public class PaymentsController {
     }
 
     @PostMapping("payRental")
-    public ResponseEntity<?> update(int rentalId) {
+    public ResponseEntity<?> add(int rentalId) {
         var result = paymentService.payRental(rentalId);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @PostMapping("payRentalWithCredCard")
+    public ResponseEntity<?> payRentalWithCredCard(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+        var result = paymentService.payRentalWithCredCard(createPaymentRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

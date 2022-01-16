@@ -1,13 +1,9 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.CityService;
-import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.dtos.CityListDto;
-import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.cityRequests.CreateCityRequest;
+import com.btkAkademi.rentACar.business.requests.cityRequests.UpdateCityRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

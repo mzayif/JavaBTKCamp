@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.btkAkademi.rentACar.business.abstracts.CityService;
-import com.btkAkademi.rentACar.business.dtos.CityListDto;
-import com.btkAkademi.rentACar.business.requests.CityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.CityRequests.UpdateCityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -12,12 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name="rental_extra_service")
-public class RentalExtraService {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+public class RentalExtraService extends BaseEntity  {
 
     @Column(name="service_price")
     private double servicePrice;

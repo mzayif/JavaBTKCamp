@@ -17,7 +17,7 @@ public class CustomerManager implements CustomerService {
     }
 
     @Override
-    public Result checkIfCustomer(int customerId) {
+    public Result checkIfCustomerExists(int customerId) {
         var customer = customerDao.findById(customerId).isPresent();
         return customer ? new SuccessResult() : new ErrorResult();
     }

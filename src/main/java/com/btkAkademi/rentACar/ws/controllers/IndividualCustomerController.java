@@ -2,10 +2,9 @@ package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
 import com.btkAkademi.rentACar.business.dtos.IndividualCustomerListDto;
-import com.btkAkademi.rentACar.business.requests.CustomerRequest.CreateIndividualCustomerRequest;
-import com.btkAkademi.rentACar.business.requests.CustomerRequest.UpdateIndividualCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.customerRequests.CreateIndividualCustomerRequest;
+import com.btkAkademi.rentACar.business.requests.customerRequests.UpdateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
-import com.btkAkademi.rentACar.dataAccess.abstracts.IndividualCustomerDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

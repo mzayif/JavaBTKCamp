@@ -4,8 +4,8 @@ import com.btkAkademi.rentACar.business.abstracts.AdditionalServiceService;
 import com.btkAkademi.rentACar.business.abstracts.RentalExtraServiceService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.dtos.RentalExtraServiceListDto;
-import com.btkAkademi.rentACar.business.requests.RentalExtraServiceRequests.CreateRentalExtraServiceRequest;
-import com.btkAkademi.rentACar.business.requests.RentalExtraServiceRequests.UpdateRentalExtraServiceRequest;
+import com.btkAkademi.rentACar.business.requests.rentalExtraServiceRequests.CreateRentalExtraServiceRequest;
+import com.btkAkademi.rentACar.business.requests.rentalExtraServiceRequests.UpdateRentalExtraServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -91,9 +91,23 @@ public class RentalExtraServiceManager implements RentalExtraServiceService {
     }
 
     @Override
+    public Result delete(int id) {
+        var car = this.extraServiceDao.findById(id);
+        if (!car.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.extraServiceDao.delete(car.get());
+        return new SuccessResult(Messages.DELETED);
+    }
+
+
+
+
+    @Override
     public Result checkIfRentalExtraServiceExists(int id) {
         return this.extraServiceDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.NOTFOUND);
     }
+
+
 
 
     @Override

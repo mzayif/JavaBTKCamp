@@ -7,6 +7,7 @@ public class Messages {
 	public static final String NOTFOUND = "Record Not Found";
 	public static final String ALREADYEXISTS = "Record Already Exists";
 	public static final String SUCCEED = "Succeed";
+    public static final String DELETED = "Record Deleted";
 
 
 	public final static String BRANDADDSUCCESSFUL = "brand.added";
@@ -46,4 +47,5 @@ public class Messages {
     public static final String CITYNOTFOUND = "City not found";
     public static final String RENTALNOTFOUND = "Rental not found";
     public static final String ALREADYPAYED = "Rental fee already paid";
+    public static final String CARDLIMITISNOTVALID = "Card Limit is not valid";
 }

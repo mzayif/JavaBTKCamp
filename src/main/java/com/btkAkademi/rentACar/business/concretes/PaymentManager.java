@@ -1,11 +1,14 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+import com.btkAkademi.rentACar.business.abstracts.CreditCardService;
 import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.abstracts.RentalExtraServiceService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.CreatePaymentRequest;
-import com.btkAkademi.rentACar.business.requests.PaymentRequests.UpdatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.bankRequests.BankDto;
+import com.btkAkademi.rentACar.business.requests.bankRequests.CreateCreditCardRequests;
+import com.btkAkademi.rentACar.business.requests.paymentRequests.CreatePaymentRequest;
+import com.btkAkademi.rentACar.business.requests.paymentRequests.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -13,10 +16,11 @@ import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
 import com.btkAkademi.rentACar.entities.concretes.Payment;
 import com.btkAkademi.rentACar.entities.concretes.RentalExtraService;
+import com.btkAkademi.rentACar.servises.bankServise.abstracts.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,13 +29,18 @@ public class PaymentManager implements PaymentService {
     private final PaymentDao paymentDao;
     private final RentalService rentalService;
     private final RentalExtraServiceService rentalExtraService;
+    private final BankService bankService;
+    private final CreditCardService creditCardService;
     private final ModelMapperService modelMapperService;
+    private int customerId;
 
     @Autowired
-    public PaymentManager(PaymentDao paymentDao, RentalService rentalService, RentalExtraServiceService rentalExtraService, ModelMapperService modelMapperService) {
+    public PaymentManager(PaymentDao paymentDao, RentalService rentalService, RentalExtraServiceService rentalExtraService, BankService bankService, CreditCardService creditCardService, ModelMapperService modelMapperService) {
         this.paymentDao = paymentDao;
         this.rentalService = rentalService;
         this.rentalExtraService = rentalExtraService;
+        this.bankService = bankService;
+        this.creditCardService = creditCardService;
         this.modelMapperService = modelMapperService;
     }
 
@@ -42,6 +51,24 @@ public class PaymentManager implements PaymentService {
 
         return new ErrorResult(Messages.ALREADYPAYED);
     }
+
+    private double getRentalTotalPrice(int rentalId) {
+        var rental = this.rentalService.getByCarId(rentalId);
+        if (!rental.isSuccess()) new ErrorResult(Messages.RENTALNOTFOUND);
+        this.customerId = rental.getData().getCustomer().getId();
+
+        var day = ChronoUnit.DAYS.between(rental.getData().getRentDate(), rental.getData().getReturnDate());
+        if (day == 0)
+            day = 1;
+        double totalPrice = rental.getData().getCar().getDailyPrice() * day;
+
+        for (RentalExtraService rentalExtraService : rental.getData().getRentalExtraServices())
+            totalPrice += rentalExtraService.getAdditionalService().getServicePrice() * day;
+        return totalPrice;
+    }
+
+
+
 
     public Result add(CreatePaymentRequest createPaymentRequest) {
         var result = BusinessRules.run(
@@ -82,25 +109,61 @@ public class PaymentManager implements PaymentService {
     }
 
     @Override
+    public Result delete(int id) {
+        var payment = this.paymentDao.findById(id);
+        if (!payment.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.paymentDao.delete(payment.get());
+        return new SuccessResult(Messages.DELETED);
+    }
+
+
+
+
+    @Override
     public Result payRental(int rentalId) {
-        var rental = this.rentalService.getByCarId(rentalId);
-        if (!rental.isSuccess()) new ErrorResult(Messages.RENTALNOTFOUND);
+        double totalPrice = getRentalTotalPrice(rentalId);
 
-        Period time = Period.between(rental.getData().getRentDate(), rental.getData().getReturnDate());
-        int day = time.getDays();
-        double totalPrice = rental.getData().getCar().getDailyPrice() * day;
-
-        for (RentalExtraService rentalExtraService : rental.getData().getRentalExtraServices())
-            totalPrice += rentalExtraService.getAdditionalService().getServicePrice() * day;
+        if (!this.bankService.CardValid(new BankDto("Test","32132132132","06/25","601",totalPrice), 0, 1))
+            return new ErrorResult(Messages.CARDLIMITISNOTVALID);
 
         CreatePaymentRequest payment = new CreatePaymentRequest(rentalId, totalPrice);
         return add(payment);
     }
 
     @Override
+    public Result payRentalWithCredCard(CreatePaymentRequest createPaymentRequest) {
+        double totalPrice = getRentalTotalPrice(createPaymentRequest.getRentalId());
+
+        if (createPaymentRequest.isSaveCreditCard()) {
+            var createCreditCardRequests = this.modelMapperService.forRequest().map(createPaymentRequest, CreateCreditCardRequests.class);
+            createCreditCardRequests.setCustomerId(this.customerId);
+            creditCardService.add(createCreditCardRequests) ;
+        }
+
+
+        if (!this.bankService.CardValid(createPaymentRequest.getBankDto(), 0, 1))
+            return new ErrorResult(Messages.CARDLIMITISNOTVALID);
+
+        CreatePaymentRequest payment = new CreatePaymentRequest(createPaymentRequest.getRentalId(), totalPrice);
+        return add(payment);
+    }
+
+
+
+
+
+    @Override
     public DataResult<List<PaymentListDto>> getAll() {
         var brandList = this.paymentDao.findAll();
-        var response = brandList.stream().map(brand -> modelMapperService.forDto().map(brand, PaymentListDto.class)).collect(Collectors.toList());
+        var response = brandList.stream().map(row -> modelMapperService.forDto().map(row, PaymentListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<PaymentListDto>>(response);
+    }
+
+    @Override
+    public DataResult<List<PaymentListDto>> getAllByRentalId(int rentalId) {
+        var paymentList = this.paymentDao.findAllByRentalId(rentalId);
+        var response = paymentList.stream().map(row -> modelMapperService.forDto().map(row, PaymentListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<PaymentListDto>>(response);
     }
 

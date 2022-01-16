@@ -1,13 +1,9 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.AdditionalServiceService;
-import com.btkAkademi.rentACar.business.abstracts.CarDamageService;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
-import com.btkAkademi.rentACar.business.dtos.CarDamageListDto;
-import com.btkAkademi.rentACar.business.requests.AdditionalServiceRequests.CreateAdditionalServiceRequest;
-import com.btkAkademi.rentACar.business.requests.AdditionalServiceRequests.UpdateAdditionalServiceRequest;
-import com.btkAkademi.rentACar.business.requests.CarDamageRequests.CreateCarDamagesRequest;
-import com.btkAkademi.rentACar.business.requests.CarDamageRequests.UpdateCarDamagesRequest;
+import com.btkAkademi.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
+import com.btkAkademi.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

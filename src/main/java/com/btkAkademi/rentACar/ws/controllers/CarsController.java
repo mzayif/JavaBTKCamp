@@ -4,10 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
-import com.btkAkademi.rentACar.business.dtos.CarMaintenanceListDto;
-import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.CreateCarMaintenanceRequests;
-import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.UpdateCarMaintenanceRequests;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

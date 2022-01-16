@@ -4,13 +4,14 @@ import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.dtos.CarMaintenanceListDto;
-import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.CreateCarMaintenanceRequests;
-import com.btkAkademi.rentACar.business.requests.CarMaintenanseRequests.UpdateCarMaintenanceRequests;
+import com.btkAkademi.rentACar.business.requests.carMaintenanseRequests.CreateCarMaintenanceRequests;
+import com.btkAkademi.rentACar.business.requests.carMaintenanseRequests.UpdateCarMaintenanceRequests;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CarMaintenanceDao;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -43,13 +44,6 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 
     @Override
-    public DataResult<List<CarMaintenanceListDto>> getAll() {
-        var colorList = this.carMaintenanceDao.findAll();
-        var response = colorList.stream().map(color -> modelMapperService.forDto().map(color, CarMaintenanceListDto.class)).collect(Collectors.toList());
-        return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
-    }
-
-    @Override
     public Result add(CreateCarMaintenanceRequests createCarMaintenanceRequests) {
 
         var checkCarResult = this.carService.checkIfCarExists(createCarMaintenanceRequests.getCarId());
@@ -65,8 +59,6 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         }
 
 
-        this.carService.sendMaintenance(createCarMaintenanceRequests.getCarId());
-
         var carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequests, CarMaintenance.class);
         this.carMaintenanceDao.save(carMaintenance);
         return new SuccessResult(Messages.CREATED);
@@ -81,7 +73,6 @@ public class CarMaintenanceManager implements CarMaintenanceService {
         }
 
 
-        this.carService.returnMaintenance(carMaintenance.getCar().getId());
         carMaintenance.setSendMaintenanceDate(updateCarMaintenanceRequests.getSendMaintenanceDate());
         carMaintenance.setReturnMaintenanceDate(updateCarMaintenanceRequests.getReturnMaintenanceDate());
         this.carMaintenanceDao.save(carMaintenance);
@@ -90,8 +81,41 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     }
 
     @Override
+    public Result delete(int id) {
+        var brand = this.carMaintenanceDao.findById(id);
+        if (!brand.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+
+        this.carMaintenanceDao.delete(brand.get());
+        return new SuccessResult(Messages.DELETED);
+    }
+
+
+
+    @Override
     public Result isCarMaintenance(int carId) {
         var carMaintenance = this.carMaintenanceDao.checkCarMaintenance(carId);
         return carMaintenance.isEmpty() || carMaintenance.get().size() == 0 ? new SuccessResult() : new ErrorResult(Messages.NOTAVAILABLE);
+    }
+
+
+
+    @Override
+    public DataResult<List<CarMaintenanceListDto>> getAll() {
+        var colorList = this.carMaintenanceDao.findAll();
+        var response = colorList.stream().map(color -> modelMapperService.forDto().map(color, CarMaintenanceListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
+    }
+
+    @Override
+    public DataResult<List<CarMaintenanceListDto>> getAllByCarId(int carId) {
+        var colorList = this.carMaintenanceDao.findAllByCarId(carId);
+        var response = colorList.stream().map(color -> modelMapperService.forDto().map(color, CarMaintenanceListDto.class)).collect(Collectors.toList());
+        return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
+    }
+
+    @Override
+    public DataResult<CarMaintenance> getById(int id) {
+        var carMaintenance = this.carMaintenanceDao.findById(id);
+        return carMaintenance.isPresent() ? new SuccessDataResult<CarMaintenance>(carMaintenance.get()) : new ErrorDataResult<CarMaintenance>();
     }
 }

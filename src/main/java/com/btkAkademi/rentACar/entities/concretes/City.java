@@ -11,12 +11,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name="city")
-public class City {
+public class City  extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+    @Column(name="city_code")
+    private int cityCode;
 
     @Column(name="name")
     private String name;
