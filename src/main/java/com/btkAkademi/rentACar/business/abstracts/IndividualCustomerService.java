@@ -15,6 +15,10 @@ public interface IndividualCustomerService {
     Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest);
     Result delete(int id);
 
+
+    Result checkIfFindexScore(int customerId, int minFindexScore);
+    Result checkIfCustomerExists(int customerId);
+
     DataResult<List<IndividualCustomerListDto>> getAll();
     DataResult<List<IndividualCustomerListDto>> getPageable(int page, int pageSize);
     DataResult<IndividualCustomer> getById(int id);

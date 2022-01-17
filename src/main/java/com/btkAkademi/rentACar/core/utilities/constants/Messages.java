@@ -48,4 +48,5 @@ public class Messages {
     public static final String RENTALNOTFOUND = "Rental not found";
     public static final String ALREADYPAYED = "Rental fee already paid";
     public static final String CARDLIMITISNOTVALID = "Card Limit is not valid";
+	public static final String FINDEXSCORENOTENOUGH = "Findex Score Not Enough";
 }

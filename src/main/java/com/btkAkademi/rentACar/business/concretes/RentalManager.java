@@ -84,6 +84,10 @@ public class RentalManager implements RentalService {
             return rules;
         }
 
+        var car = this.carService.getById(createRentalRequest.getCarId());
+        var findexScoreResult = this.customerService.checkIfFindexScore(createRentalRequest.getCustomerId(), car.getData().getFindexScore());
+        if (!findexScoreResult.isSuccess()) return findexScoreResult;
+
         if (createRentalRequest.getReturnCityId() > 0 && !this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId()).isSuccess())
             return new ErrorResult(Messages.CITYNOTFOUND);
         //CreditCard creditCard = CreditCard.builder().
@@ -131,9 +135,6 @@ public class RentalManager implements RentalService {
     }
 
 
-
-
-
     @Override
     public Result isCarRented(int carId) {
         var rentCars = this.rentalDao.getOnRentCars(LocalDate.now());
@@ -144,9 +145,6 @@ public class RentalManager implements RentalService {
     public Result checkIfRentalExists(int id) {
         return this.rentalDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.RENTALNOTFOUND);
     }
-
-
-
 
 
     @Override

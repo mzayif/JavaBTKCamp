@@ -14,6 +14,10 @@ public interface CorporateCustomerService {
     Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest);
     Result delete(int id);
 
+    Result checkIfFindexScore(int customerId, int minFindexScore);
+    Result checkIfCustomerExists(int customerId);
+
+
     DataResult<List<CorporateCustomerListDto>> getAll();
     DataResult<List<CorporateCustomerListDto>> getPageable(int page, int pageSize);
     DataResult<CorporateCustomer> getById(int id);

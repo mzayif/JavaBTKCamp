@@ -1,17 +1,16 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
-import com.btkAkademi.rentACar.business.dtos.CarListDto;
 import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.customerRequests.CreateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.customerRequests.UpdateCorporateCustomerRequest;
-import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
-import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
+import com.btkAkademi.rentACar.servises.FindexScore.FindexService;
+import com.btkAkademi.rentACar.servises.FindexScore.PersonType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,10 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class CorporateCustomerManager implements CorporateCustomerService {
     private final CorporateCustomerDao corporateCustomerDao;
+    private final FindexService findexService;
     private final ModelMapperService modelMapperService;
 
-    public CorporateCustomerManager(CorporateCustomerDao corporateCustomerDao, ModelMapperService modelMapperService) {
+    public CorporateCustomerManager(CorporateCustomerDao corporateCustomerDao, FindexService findexService, ModelMapperService modelMapperService) {
         this.corporateCustomerDao = corporateCustomerDao;
+        this.findexService = findexService;
         this.modelMapperService = modelMapperService;
     }
 
@@ -61,9 +62,23 @@ public class CorporateCustomerManager implements CorporateCustomerService {
         return new SuccessResult(Messages.DELETED);
     }
 
+    @Override
+    public Result checkIfFindexScore(int customerId, int minFindexScore) {
+        var customer = this.corporateCustomerDao.findById(customerId);
 
+        if (!customer.isPresent()) return new ErrorResult(Messages.BRANDNOTFOUND);
 
+        var customerScore = this.findexService.getFindexScore(customer.get().getTaxName(), PersonType.COMPANY);
 
+        return customerScore > minFindexScore ? new SuccessResult():new ErrorResult(Messages.FINDEXSCORENOTENOUGH);
+
+    }
+
+    @Override
+    public Result checkIfCustomerExists(int customerId) {
+        var customer = corporateCustomerDao.findById(customerId).isPresent();
+        return customer ? new SuccessResult() : new ErrorResult();
+    }
 
 
     @Override
@@ -75,7 +90,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
     @Override
     public DataResult<List<CorporateCustomerListDto>> getPageable(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page-1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
         var carList = this.corporateCustomerDao.findAll(pageable).getContent();
         var response = carList.stream().map(row -> modelMapperService.forDto().map(row, CorporateCustomerListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CorporateCustomerListDto>>(response, Messages.SUCCEED);

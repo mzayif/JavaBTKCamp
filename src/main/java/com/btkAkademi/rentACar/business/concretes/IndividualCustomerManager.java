@@ -1,7 +1,6 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
-import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.dtos.IndividualCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.customerRequests.CreateIndividualCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.customerRequests.UpdateIndividualCustomerRequest;
@@ -9,8 +8,9 @@ import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.IndividualCustomerDao;
-import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
 import com.btkAkademi.rentACar.entities.concretes.IndividualCustomer;
+import com.btkAkademi.rentACar.servises.FindexScore.FindexService;
+import com.btkAkademi.rentACar.servises.FindexScore.PersonType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +23,14 @@ import java.util.stream.Collectors;
 @Service
 public class IndividualCustomerManager implements IndividualCustomerService {
     private final IndividualCustomerDao individualCustomerDao;
+    private final FindexService findexService;
     private final ModelMapperService modelMapperService;
 
 
     @Autowired
-    public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao, ModelMapperService modelMapperService) {
+    public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao, FindexService findexService, ModelMapperService modelMapperService) {
         this.individualCustomerDao = individualCustomerDao;
+        this.findexService = findexService;
         this.modelMapperService = modelMapperService;
     }
 
@@ -72,7 +74,23 @@ public class IndividualCustomerManager implements IndividualCustomerService {
         return new SuccessResult(Messages.DELETED);
     }
 
+    @Override
+    public Result checkIfFindexScore(int customerId, int minFindexScore) {
 
+        var customer = this.individualCustomerDao.findById(customerId);
+
+        if (!customer.isPresent()) return new ErrorResult(Messages.BRANDNOTFOUND);
+
+        var customerScore = this.findexService.getFindexScore(customer.get().getIdentificationNumber(), PersonType.PERSON);
+
+        return customerScore > minFindexScore ? new SuccessResult():new ErrorResult(Messages.FINDEXSCORENOTENOUGH);
+    }
+
+    @Override
+    public Result checkIfCustomerExists(int customerId) {
+        var customer = individualCustomerDao.findById(customerId).isPresent();
+        return customer ? new SuccessResult() : new ErrorResult();
+    }
 
 
     @Override
