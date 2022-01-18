@@ -3,6 +3,7 @@ package com.btkAkademi.rentACar.business.abstracts;
 import java.util.List;
 
 import com.btkAkademi.rentACar.business.dtos.CarListDto;
+import com.btkAkademi.rentACar.business.requests.carRequests.AvailableCar;
 import com.btkAkademi.rentACar.business.requests.carRequests.CreateCarRequest;
 import com.btkAkademi.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -22,4 +23,5 @@ public interface CarService {
 	DataResult<List<CarListDto>> getPageable(int page, int pageSize);
 	DataResult<Car> getById(int id);
 
+    DataResult<Car> getAvailableSameTypeCar(int carSegmentTypeId);
 }

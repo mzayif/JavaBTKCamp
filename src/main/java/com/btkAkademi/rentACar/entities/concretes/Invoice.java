@@ -12,10 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="invoice")
+@Table(name = "invoice")
 public class Invoice extends BaseEntity {
+    @Column(name = "invoice_date")
     private LocalDate invoiceDate;
+    @Column(name = "total_price")
     private double totalPrice;
+    @Column(name = "total_discount", nullable = true)
     private double totalDiscount;
 
     @OneToOne
@@ -25,4 +28,4 @@ public class Invoice extends BaseEntity {
 
     @OneToMany(mappedBy = "invoice")
     private List<Payment> payments;
- }
+}

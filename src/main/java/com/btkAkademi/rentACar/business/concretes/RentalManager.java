@@ -115,8 +115,7 @@ public class RentalManager implements RentalService {
                 return individualRules;
             }
 
-        } else
-        {
+        } else {
             // şirket ise
             var corporateRules = BusinessRules.run(
                     this.corporateCustomerService.checkIfFindexScore(createRentalRequest.getCustomerId(), car.getData().getFindexScore())
@@ -129,15 +128,14 @@ public class RentalManager implements RentalService {
 
 
         // Kiralanmak istenen aracın Müsaitliği kontrol edilir.
-        var carValidRules = BusinessRules.run(
-                this.carService.checkIfCarRental(createRentalRequest.getCarId()),
-                this.carMaintenanceService.isCarMaintenance(createRentalRequest.getCarId())
-        );
+        var checkCar = this.carService.checkIfCarRental(createRentalRequest.getCarId());
+        if (!checkCar.isSuccess()) {
+            // Aynı segmentte müsait araç var mı? diye kontrol eklenir.
+            var sameTypeCars = this.carService.getAvailableSameTypeCar(car.getData().getCarSegmentType().getId());
+            if (sameTypeCars.isSuccess())
+                return new ErrorResult(Messages.THIS_CAR_NOT_AVAILABLE_BUT_OTHER_THERE_CAR(sameTypeCars.getData().getId()));
 
-        if (rules != null) {
-            // Aynı statüde müsait araç var mı? diye kontrol eklenir.
-
-
+            return checkCar;
         }
 
 

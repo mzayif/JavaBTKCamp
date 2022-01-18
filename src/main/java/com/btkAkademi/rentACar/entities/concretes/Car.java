@@ -35,8 +35,7 @@ public class Car extends BaseEntity {
 	@Column(name = "kilometer")
 	private int kilometer;
 
-	@Column(name = "car_type")
-	private CarType carType;
+
 
 //	@Column(name = "is_maintenance")
 //	private boolean isMaintenance;
@@ -49,6 +48,9 @@ public class Car extends BaseEntity {
 	@JoinColumn(name="color_id")
 	private Color color;
 
+	@ManyToOne
+	@JoinColumn(name="car_segment_type_id")
+	private CarSegmentType carSegmentType;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "car")

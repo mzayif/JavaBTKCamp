@@ -1,5 +1,7 @@
 package com.btkAkademi.rentACar.core.utilities.constants;
 
+import com.btkAkademi.rentACar.entities.concretes.Car;
+
 public class Messages {
 
 	public static final String UPDATED = "Record Updated";
@@ -50,4 +52,9 @@ public class Messages {
     public static final String CARDLIMITISNOTVALID = "Card Limit is not valid";
 	public static final String FINDEXSCORENOTENOUGH = "Findex Score Not Enough";
     public static final String MINAGENOTENOUGTH = "Min age not enough to rent a car";
+	public static final String NOT_AVAILABLE_OTHER_CAR = "No other available car found in this segment";
+
+	public static String THIS_CAR_NOT_AVAILABLE_BUT_OTHER_THERE_CAR(int id) {
+		return "The selected Car is Not Available for the specified day. But in this segment the " + id+ " car is available";
+	}
 }

@@ -1,12 +1,15 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.btkAkademi.rentACar.business.abstracts.BrandService;
+import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
+import com.btkAkademi.rentACar.business.requests.carRequests.AvailableCar;
 import com.btkAkademi.rentACar.core.utilities.results.*;
-import com.btkAkademi.rentACar.entities.concretes.Brand;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,23 +26,25 @@ import com.btkAkademi.rentACar.entities.concretes.Car;
 
 
 /*
-*   Araç Kayıt Gereksinimleri
-*       1- Araç kayıt ve güncelleme sırasında Brand in varlığı kontrol edilmeli
-*       1- Araç kayıt ve güncelleme sırasında Color in varlığı kontrol edilmeli
-* */
+ *   Araç Kayıt Gereksinimleri
+ *       1- Araç kayıt ve güncelleme sırasında Brand in varlığı kontrol edilmeli
+ *       1- Araç kayıt ve güncelleme sırasında Color in varlığı kontrol edilmeli
+ * */
 @Service
 public class CarManager implements CarService {
 
-    private final CarDao carDao;
     private final ModelMapperService modelMapperService;
+    private final CarDao carDao;
     private final BrandService brandService;
     private final ColorService colorService;
+    private final CarMaintenanceService carMaintenanceService;
 
-    public CarManager(CarDao carDao, ModelMapperService modelMapperService, BrandService brandService, ColorService colorService) {
+    public CarManager(CarDao carDao, ModelMapperService modelMapperService, BrandService brandService, ColorService colorService, @Lazy CarMaintenanceService carMaintenanceService) {
         this.carDao = carDao;
         this.modelMapperService = modelMapperService;
         this.brandService = brandService;
         this.colorService = colorService;
+        this.carMaintenanceService = carMaintenanceService;
     }
 
     @Override
@@ -69,15 +74,15 @@ public class CarManager implements CarService {
             return result;
         }
 
-		var car =this.carDao.findById(updateCarRequest.getId()).get();
-		car.setDailyPrice(updateCarRequest.getDailyPrice());
-		car.setDescription(updateCarRequest.getDescription());
-		car.setFindexScore(updateCarRequest.getFindexScore());
-		car.setKilometer(updateCarRequest.getKilometer());
-		car.setModelYear(updateCarRequest.getModelYear());
+        var car = this.carDao.findById(updateCarRequest.getId()).get();
+        car.setDailyPrice(updateCarRequest.getDailyPrice());
+        car.setDescription(updateCarRequest.getDescription());
+        car.setFindexScore(updateCarRequest.getFindexScore());
+        car.setKilometer(updateCarRequest.getKilometer());
+        car.setModelYear(updateCarRequest.getModelYear());
 //		car.setBrand(updateCarRequest.getBrand());
 //		car.setColor(updateCarRequest.getColor());
-		this.carDao.save(car);
+        this.carDao.save(car);
         return new SuccessResult(Messages.UPDATED);
     }
 
@@ -91,8 +96,6 @@ public class CarManager implements CarService {
     }
 
 
-
-
     public Result checkIfCarExists(int id) {
         return this.carDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
@@ -102,10 +105,12 @@ public class CarManager implements CarService {
         if (car.isEmpty())
             return new ErrorResult(Messages.NOTAVAILABLE);
 
-        return new SuccessResult();
+        var availableCars = this.carDao.getAvailableCars(LocalDate.now());
+        var sameOtherCars = availableCars.stream().filter(x -> x.getId() == car.get().getId()).findFirst();
+        if (sameOtherCars.isPresent()) return new SuccessResult();
+
+        return new ErrorResult(Messages.NOTAVAILABLE);
     }
-
-
 
 
     public DataResult<List<CarListDto>> getAll() {
@@ -116,7 +121,7 @@ public class CarManager implements CarService {
 
     @Override
     public DataResult<List<CarListDto>> getPageable(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         var carList = this.carDao.findAll(pageable).getContent();
         var response = carList.stream().map(row -> modelMapperService.forDto().map(row, CarListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarListDto>>(response, Messages.SUCCEED);
@@ -127,6 +132,19 @@ public class CarManager implements CarService {
     public DataResult<Car> getById(int id) {
         var car = this.carDao.findById(id);
         return car.isPresent() ? new SuccessDataResult<Car>(car.get()) : new ErrorDataResult<Car>();
+    }
+
+    @Override
+    public DataResult<Car> getAvailableSameTypeCar(int carSegmentTypeId) {
+
+        var availableCars = this.carDao.getAvailableCars(LocalDate.now());
+        if (availableCars.size() == 0) new ErrorDataResult<Car>(Messages.NOT_AVAILABLE_OTHER_CAR);
+
+        // istenen araç müsait değilse aynı segemntte başka araba kontrolü yapılacak
+        var sameOtherCars = availableCars.stream().filter(x -> x.getCarSegmentType().getId() == carSegmentTypeId).findFirst();
+        if (sameOtherCars.isPresent()) return new SuccessDataResult<Car>(sameOtherCars.get());
+
+        return new ErrorDataResult<Car>(Messages.NOT_AVAILABLE_OTHER_CAR);
     }
 
 
