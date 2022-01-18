@@ -23,26 +23,36 @@ public class InvoicesController {
     }
 
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<InvoiceListDto>>> getAll() {
-        return ResponseEntity.ok(invoiceService.getAll());
-    }
-
-    @GetMapping("getInvoiceDetail")
-    public ResponseEntity<DataResult<InvoiceListDto>> getInvoiceDetail(int rentalId) {
-        return ResponseEntity.ok(invoiceService.getInvoiceDetail(rentalId));
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
         var result = invoiceService.add(createInvoiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
-
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateInvoiceRequest updateInvoiceRequest) {
         var result = invoiceService.update(updateInvoiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = invoiceService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @GetMapping("getall")
+    public ResponseEntity<?> getAll() {
+        var result = invoiceService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @GetMapping("getInvoiceDetail")
+    public ResponseEntity<?> getInvoiceDetail(int rentalId) {
+        var result = invoiceService.getInvoiceDetail(rentalId);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
 }

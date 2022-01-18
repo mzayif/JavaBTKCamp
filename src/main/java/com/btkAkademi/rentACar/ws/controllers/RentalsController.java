@@ -21,40 +21,52 @@ public class RentalsController {
     }
 
 
-//    @GetMapping("getall")
-//    public ResponseEntity<DataResult<List<RentalListDto>>> getAll() {
-//        return ResponseEntity.ok(rentalService.getAll());
-//    }
-//    @GetMapping("get-on-rent-cars")
-//    public ResponseEntity<DataResult<List<RentalListDto>>> getOnRentCars() {
-//        return ResponseEntity.ok(rentalService.getOnRentCars());
-//    }
-//    @GetMapping("getAllByCarId")
-//    public ResponseEntity<DataResult<List<RentalListDto>>> getAllByCarId(@RequestParam  int carId) {
-//        return ResponseEntity.ok(rentalService.getAllByCarId(carId));
-//    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
         var result = rentalService.add(createRentalRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateRentalRequest updateRentalRequest) {
         var result = rentalService.update(updateRentalRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = rentalService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
     @GetMapping("getall")
-    public ResponseEntity<DataResult<List<RentalListDto>>> getAll() {
+    public ResponseEntity<?> getAll() {
         var result = rentalService.getAll();
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
+    @GetMapping("getAllByPage")
+    public ResponseEntity<?> getAllByPage(int pageNo, int pageSize) {
+        var result = rentalService.getPageable(pageNo == 0 ? 1 : pageNo, pageSize == 0 ? 10 : pageSize);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
     @GetMapping("getOnRentCars")
-    public ResponseEntity<DataResult<List<RentalListDto>>> getOnRentCars() {
+    public ResponseEntity<?> getOnRentCars() {
         var result = rentalService.getOnRentCars();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAvailableCarForRent")
+    public ResponseEntity<?> getAvailableCarForRent() {
+        var result = rentalService.getAvailableCarForRent();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getRentalDetail")
+    public ResponseEntity<?> getRentalDetail(int rentalId) {
+        var result = rentalService.getRentalDetail(rentalId);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 

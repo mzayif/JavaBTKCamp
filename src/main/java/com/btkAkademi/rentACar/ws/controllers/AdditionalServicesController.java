@@ -22,20 +22,27 @@ public class AdditionalServicesController {
         this.additionalService = additionalServiceService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<AdditionalServiceListDto>>> getAll() {
-        return ResponseEntity.ok(additionalService.getAll());
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateAdditionalServiceRequest additionalServiceRequest) {
         var result = additionalService.add(additionalServiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
         var result = additionalService.update(updateAdditionalServiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = additionalService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @GetMapping("getall")
+    public ResponseEntity<DataResult<List<AdditionalServiceListDto>>> getAll() {
+        return ResponseEntity.ok(additionalService.getAll());
     }
 }

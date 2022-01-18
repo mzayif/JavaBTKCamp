@@ -20,6 +20,23 @@ public class IndividualCustomerController {
     public IndividualCustomerController(IndividualCustomerService individualCustomerService) {
         this.individualCustomerService = individualCustomerService;
     }
+    @PostMapping("add")
+    public ResponseEntity<?> add(@RequestBody CreateIndividualCustomerRequest createIndividualCustomerRequest) {
+        var result = individualCustomerService.add(createIndividualCustomerRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateIndividualCustomerRequest individualCustomerRequest) {
+        var result = individualCustomerService.update(individualCustomerRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = individualCustomerService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
+    }
 
 
     @GetMapping("getall")
@@ -28,17 +45,11 @@ public class IndividualCustomerController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateIndividualCustomerRequest createIndividualCustomerRequest) {
-        var result = individualCustomerService.add(createIndividualCustomerRequest);
+    @GetMapping("getAllByPage")
+    public ResponseEntity<?> getAllByPage(int pageNo, int pageSize) {
+        var result = individualCustomerService.getPageable(pageNo == 0 ? 1 : pageNo, pageSize == 0 ? 10 : pageSize);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
-    public ResponseEntity<?> update(@RequestBody @Valid UpdateIndividualCustomerRequest individualCustomerRequest) {
-
-        var result = individualCustomerService.update(individualCustomerRequest);
-        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
-    }
 }
 

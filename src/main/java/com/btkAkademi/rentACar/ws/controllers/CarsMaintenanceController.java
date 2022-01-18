@@ -22,20 +22,42 @@ public class CarsMaintenanceController {
         this.carMaintenanceService = carService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CarMaintenanceListDto>>> getAll() {
-        return ResponseEntity.ok(carMaintenanceService.getAll());
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateCarMaintenanceRequests createCarMaintenanceRequests) {
         return ResponseEntity.ok(carMaintenanceService.add(createCarMaintenanceRequests));
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateCarMaintenanceRequests updateCarMaintenanceRequests) {
-
         var result = carMaintenanceService.update(updateCarMaintenanceRequests);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = carMaintenanceService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+
+
+
+    @GetMapping("getall")
+    public ResponseEntity<DataResult<List<CarMaintenanceListDto>>> getAll() {
+        var result = carMaintenanceService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAllInActiveMaintenance")
+    public ResponseEntity<DataResult<List<CarMaintenanceListDto>>> getAllInActiveMaintenance() {
+        var result = carMaintenanceService.getAllInActiveMaintenance();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAllByCarId")
+    public ResponseEntity<DataResult<List<CarMaintenanceListDto>>> getAllByCarId(int id) {
+        var result = carMaintenanceService.getAllByCarId(id);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

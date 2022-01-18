@@ -22,21 +22,9 @@ public class PaymentsController {
         this.paymentService = paymentService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<PaymentListDto>>> getAll() {
-        return ResponseEntity.ok(paymentService.getAll());
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
         var result = paymentService.add(createPaymentRequest);
-        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
-
-    }
-
-    @PostMapping("update")
-    public ResponseEntity<?> update(@RequestBody @Valid UpdatePaymentRequest updatePaymentRequest) {
-        var result = paymentService.update(updatePaymentRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
@@ -46,10 +34,35 @@ public class PaymentsController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-
     @PostMapping("payRentalWithCredCard")
     public ResponseEntity<?> payRentalWithCredCard(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
         var result = paymentService.payRentalWithCredCard(createPaymentRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
+
+    @PutMapping("update")
+    public ResponseEntity<?> update(@RequestBody @Valid UpdatePaymentRequest updatePaymentRequest) {
+        var result = paymentService.update(updatePaymentRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = paymentService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @GetMapping("getAll")
+    public ResponseEntity<?> getAll() {
+        var result = paymentService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAllByRentalId")
+    public ResponseEntity<?> getAllByRentalId(int rentalId) {
+        var result = paymentService.getAllByRentalId(rentalId);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
 }

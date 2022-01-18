@@ -22,10 +22,6 @@ public class CarDamagesController {
         this.carDamageService = carService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CarDamageListDto>>> getAll() {
-        return ResponseEntity.ok(carDamageService.getAll());
-    }
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateCarDamagesRequest createCarDamagesRequest) {
@@ -33,10 +29,30 @@ public class CarDamagesController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateCarDamagesRequest updateCarDamagesRequest) {
-
         var result = carDamageService.update(updateCarDamagesRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = carDamageService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+
+
+    @GetMapping("getAll")
+    public ResponseEntity<DataResult<List<CarDamageListDto>>> getAll() {
+        var result = carDamageService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAllByCarId")
+    public ResponseEntity<DataResult<List<CarDamageListDto>>> getAllByCarId(int id) {
+        var result = carDamageService.getAllByCarId(id);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

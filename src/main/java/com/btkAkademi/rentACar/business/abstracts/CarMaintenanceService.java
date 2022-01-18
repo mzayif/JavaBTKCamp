@@ -18,5 +18,6 @@ public interface CarMaintenanceService {
 
     DataResult<List<CarMaintenanceListDto>> getAll();
     DataResult<List<CarMaintenanceListDto>> getAllByCarId(int carId);
+    DataResult<List<CarMaintenanceListDto>> getAllInActiveMaintenance();
     DataResult<CarMaintenance> getById(int id);
 }

@@ -21,20 +21,34 @@ public class RentalExtraServicesController {
         this.extraService = extraServiceService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<RentalExtraServiceListDto>>> getAll() {
-        return ResponseEntity.ok(extraService.getAll());
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateRentalExtraServiceRequest createRentalExtraServiceRequest) {
         var result = extraService.add(createRentalExtraServiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateRentalExtraServiceRequest updateRentalExtraServiceRequest) {
         var result = extraService.update(updateRentalExtraServiceRequest);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = extraService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+    @GetMapping("getall")
+    public ResponseEntity<?> getAll() {
+        var result = extraService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getByRentalId")
+    public ResponseEntity<?> getByRentalId(int rentalId) {
+        var result = extraService.getByRentalId(rentalId);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

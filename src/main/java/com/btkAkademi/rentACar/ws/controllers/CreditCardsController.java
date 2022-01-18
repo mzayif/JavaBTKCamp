@@ -1,56 +1,51 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
-import javax.validation.Valid;
-
 import com.btkAkademi.rentACar.business.abstracts.CreditCardService;
 import com.btkAkademi.rentACar.business.requests.bankRequests.CreateCreditCardRequests;
 import com.btkAkademi.rentACar.business.requests.bankRequests.UpdateCreditCardRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.btkAkademi.rentACar.business.abstracts.CarService;
-import com.btkAkademi.rentACar.business.requests.carRequests.CreateCarRequest;
-import com.btkAkademi.rentACar.business.requests.carRequests.UpdateCarRequest;
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("api/cars")
-public class CarsController {
-    private final CarService carService;
+@RequestMapping("api/creditCards")
+public class CreditCardsController {
+    private final CreditCardService creditCardService;
 
 
-    public CarsController(CarService carService) {
-        super();
-        this.carService = carService;
+    public CreditCardsController(CreditCardService creditCardService) {
+        this.creditCardService = creditCardService;
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateCarRequest carCreateDto) {
-        var result = carService.add(carCreateDto);
+    public ResponseEntity<?> add(@RequestBody @Valid CreateCreditCardRequests createCreditCardRequests) {
+        var result = creditCardService.add(createCreditCardRequests);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> update(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
-        var result = carService.update(updateCarRequest);
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateCreditCardRequest updateCreditCardRequest) {
+        var result = creditCardService.update(updateCreditCardRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
     @DeleteMapping("delete")
     public ResponseEntity<?> delete(int id) {
-        var result = carService.delete(id);
+        var result = creditCardService.delete(id);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
 
     @GetMapping("getall")
     public ResponseEntity<?> getAll() {
-        var result = carService.getAll();
+        var result = creditCardService.getAll();
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @GetMapping("getAllByPage")
-    public ResponseEntity<?> getAllByPage(int pageNo, int pageSize) {
-        var result = carService.getPageable(pageNo == 0 ? 1 : pageNo, pageSize == 0 ? 10 : pageSize);
+    @GetMapping("getAllByCustomerId")
+    public ResponseEntity<?> getAllByCustomerId(int customerId) {
+        var result = creditCardService.getAllByCustomerId(customerId);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 

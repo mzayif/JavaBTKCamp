@@ -11,15 +11,14 @@ import java.util.List;
 
 public interface CarSegmentTypeService {
     Result add(CreateCarSegmentTypeRequest createCarSegmentTypeRequest);
-
     Result update(UpdateCarSegmentTypeRequest updateCarSegmentTypeRequest);
-
     Result delete(int id);
+
 
     Result checkIfCarSegmentTypeExists(int id);
 
-    DataResult<List<CarSegmentTypeListDto>> getAll();
 
+    DataResult<List<CarSegmentTypeListDto>> getAll();
     DataResult<CarSegmentType> getById(int id);
 
 }

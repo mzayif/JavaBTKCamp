@@ -20,11 +20,6 @@ public class CarSegmentTypesController {
         this.carSegmentTypeService = carSegmentTypeService;
     }
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CarSegmentTypeListDto>>> getAll() {
-        return ResponseEntity.ok(carSegmentTypeService.getAll());
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreateCarSegmentTypeRequest createCarSegmentTypeRequest) {
         var result = carSegmentTypeService.add(createCarSegmentTypeRequest);
@@ -32,10 +27,26 @@ public class CarSegmentTypesController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateCarSegmentTypeRequest updateCarSegmentTypeRequest) {
         var result = carSegmentTypeService.update(updateCarSegmentTypeRequest);
-
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = carSegmentTypeService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+
+
+
+    @GetMapping("getall")
+    public ResponseEntity<DataResult<List<CarSegmentTypeListDto>>> getAll() {
+        var result = carSegmentTypeService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
 }

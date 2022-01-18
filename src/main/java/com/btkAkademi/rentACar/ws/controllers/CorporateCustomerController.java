@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
+import com.btkAkademi.rentACar.business.dtos.CarListDto;
 import com.btkAkademi.rentACar.business.dtos.CorporateCustomerListDto;
 import com.btkAkademi.rentACar.business.requests.customerRequests.CreateCorporateCustomerRequest;
 import com.btkAkademi.rentACar.business.requests.customerRequests.UpdateCorporateCustomerRequest;
@@ -22,22 +23,35 @@ public class CorporateCustomerController {
     }
 
 
-    @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CorporateCustomerListDto>>> getAll() {
-        var result = corporateCustomerService.getAll();
-        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
-    }
-
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody CreateCorporateCustomerRequest createCorporateCustomerRequest) {
         var result = corporateCustomerService.add(createCorporateCustomerRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> update(@RequestBody @Valid UpdateCorporateCustomerRequest updateCorporateCustomerRequest) {
-
         var result = corporateCustomerService.update(updateCorporateCustomerRequest);
-        return result.isSuccess() ? ResponseEntity.ok(result): ResponseEntity.badRequest().body(result);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<?> delete(int id) {
+        var result = corporateCustomerService.delete(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+
+
+    @GetMapping("getall")
+    public ResponseEntity<?> getAll() {
+        var result = corporateCustomerService.getAll();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
+
+    @GetMapping("getAllByPage")
+    public ResponseEntity<?> getAllByPage(int pageNo, int pageSize) {
+        var result = corporateCustomerService.getPageable(pageNo == 0 ? 1 : pageNo, pageSize == 0 ? 10 : pageSize);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }
