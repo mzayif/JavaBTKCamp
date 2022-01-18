@@ -1,16 +1,21 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import com.btkAkademi.rentACar.business.abstracts.CityService;
-import com.btkAkademi.rentACar.business.dtos.CarListDto;
+import com.btkAkademi.rentACar.business.abstracts.InvoiceService;
 import com.btkAkademi.rentACar.business.dtos.CityListDto;
+import com.btkAkademi.rentACar.business.dtos.InvoiceListDto;
 import com.btkAkademi.rentACar.business.requests.cityRequests.CreateCityRequest;
 import com.btkAkademi.rentACar.business.requests.cityRequests.UpdateCityRequest;
+import com.btkAkademi.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.btkAkademi.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CityDao;
+import com.btkAkademi.rentACar.dataAccess.abstracts.InvoiceDao;
 import com.btkAkademi.rentACar.entities.concretes.City;
+import com.btkAkademi.rentACar.entities.concretes.Invoice;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +40,6 @@ public class CityManager implements CityService {
         }
         return new SuccessResult();
     }
-
 
 
     @Override
@@ -86,13 +90,10 @@ public class CityManager implements CityService {
     }
 
 
-
-
     @Override
     public Result checkIfCityExists(int id) {
         return this.cityDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
-
 
 
     @Override
@@ -104,7 +105,7 @@ public class CityManager implements CityService {
 
     @Override
     public DataResult<List<CityListDto>> getPageable(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page-1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
         var cityList = this.cityDao.findAll(pageable).getContent();
         var response = cityList.stream().map(row -> modelMapperService.forDto().map(row, CityListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CityListDto>>(response, Messages.SUCCEED);

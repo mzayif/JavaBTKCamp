@@ -10,12 +10,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="city")
-public class City  extends BaseEntity{
+@Table(name = "city")
+public class City extends BaseEntity {
 
-    @Column(name="city_code")
+    @Column(name = "city_code")
     private int cityCode;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 }

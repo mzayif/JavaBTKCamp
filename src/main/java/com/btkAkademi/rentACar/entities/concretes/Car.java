@@ -2,6 +2,7 @@ package com.btkAkademi.rentACar.entities.concretes;
 
 import javax.persistence.*;
 
+import com.btkAkademi.rentACar.business.enums.CarType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,9 +28,15 @@ public class Car extends BaseEntity {
 	
 	@Column(name = "findex_score")
 	private int findexScore;
+
+	@Column(name = "min_year")
+	private int minYear;
 	
 	@Column(name = "kilometer")
 	private int kilometer;
+
+	@Column(name = "car_type")
+	private CarType carType;
 
 //	@Column(name = "is_maintenance")
 //	private boolean isMaintenance;

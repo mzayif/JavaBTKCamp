@@ -11,6 +11,7 @@ import com.btkAkademi.rentACar.entities.concretes.Car;
 
 public interface CarService {
 	Result add(CreateCarRequest carCreateDto);
+
 	Result update(UpdateCarRequest updateCarRequest);
 	Result delete(int id);
 

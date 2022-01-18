@@ -77,7 +77,7 @@ public class RentalExtraServiceManager implements RentalExtraServiceService {
         var rentalExtraService = rentalExtraServiceOpt.get();
 
         if (rentalExtraService.getRental().getId() != updateRentalExtraRequest.getRentalId()) {
-            var rental = this.rentalService.getByCarId(updateRentalExtraRequest.getRentalId()).getData();
+            var rental = this.rentalService.getByRentalId(updateRentalExtraRequest.getRentalId()).getData();
             rentalExtraService.setRental(rental);
         }
         if (rentalExtraService.getAdditionalService().getId() != updateRentalExtraRequest.getAdditionalServiceId()) {

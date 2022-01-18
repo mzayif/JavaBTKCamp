@@ -5,25 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name="payments")
-public class Payment extends BaseEntity  {
-
-
-    @Column(name="total_price")
+@Table(name="invoice")
+public class Invoice extends BaseEntity {
+    private LocalDate invoiceDate;
     private double totalPrice;
-    @Column(name="is_paid")
-    private boolean isPaid;
+    private double totalDiscount;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "rental_id")
     private Rental rental;
 
-    @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    private Invoice invoice;
-}
+
+    @OneToMany(mappedBy = "invoice")
+    private List<Payment> payments;
+ }

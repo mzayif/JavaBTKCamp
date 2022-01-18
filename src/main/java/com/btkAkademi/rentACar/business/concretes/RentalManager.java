@@ -2,8 +2,6 @@ package com.btkAkademi.rentACar.business.concretes;
 
 
 import com.btkAkademi.rentACar.business.abstracts.*;
-import com.btkAkademi.rentACar.business.dtos.CarListDto;
-import com.btkAkademi.rentACar.business.dtos.CityListDto;
 import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.dtos.RentingPriceDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequests.CreateRentalRequest;
@@ -13,13 +11,15 @@ import com.btkAkademi.rentACar.core.utilities.constants.Messages;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
-import com.btkAkademi.rentACar.entities.concretes.CreditCard;
 import com.btkAkademi.rentACar.entities.concretes.Rental;
+import com.btkAkademi.rentACar.entities.concretes.RentalExtraService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,14 +39,18 @@ import java.util.stream.Collectors;
 public class RentalManager implements RentalService {
     private final RentalDao rentalDao;
     private final CustomerService customerService;
+    private final IndividualCustomerService individualCustomerService;
+    private final CorporateCustomerService corporateCustomerService;
     private final CarService carService;
     private final CarMaintenanceService carMaintenanceService;
     private final CityService cityService;
     private final ModelMapperService modelMapperService;
 
-    public RentalManager(RentalDao rentalDao, CustomerService customerService, CarService carService, CarMaintenanceService carMaintenanceService, CityService cityService, ModelMapperService modelMapperService) {
+    public RentalManager(RentalDao rentalDao, CustomerService customerService, IndividualCustomerService individualCustomerService, CorporateCustomerService corporateCustomerService, CarService carService, CarMaintenanceService carMaintenanceService, CityService cityService, ModelMapperService modelMapperService) {
         this.rentalDao = rentalDao;
         this.customerService = customerService;
+        this.individualCustomerService = individualCustomerService;
+        this.corporateCustomerService = corporateCustomerService;
         this.carService = carService;
         this.carMaintenanceService = carMaintenanceService;
         this.cityService = cityService;
@@ -67,34 +71,114 @@ public class RentalManager implements RentalService {
         return new SuccessResult();
     }
 
+    private Result checkMinYear(LocalDate customerBirtDate, int carMinYear) {
+        Period period = Period.between(customerBirtDate, LocalDate.now());
+        return period.getYears() > carMinYear ? new SuccessResult() : new ErrorResult(Messages.MINAGENOTENOUGTH);
+    }
+
+    private Result checkBaseControl(CreateRentalRequest rentalRequest) {
+        var checkCarResult = this.carService.getById(rentalRequest.getCarId());
+        if (!checkCarResult.isSuccess()) return checkCarResult;
+
+
+        return new SuccessResult();
+    }
+
 
     @Override
     public Result add(CreateRentalRequest createRentalRequest) {
-
         var rules = BusinessRules.run(
                 checkDateRule(createRentalRequest.getRentDate(), createRentalRequest.getReturnDate()),
-                this.customerService.checkIfCustomerExists(createRentalRequest.getCustomerId()),
-                this.carService.checkIfCarExists(createRentalRequest.getCarId()),
-                this.carService.checkIfCarRental(createRentalRequest.getCarId()),
-                this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId()),
-                this.carMaintenanceService.isCarMaintenance(createRentalRequest.getCarId())
+                this.carService.getById(createRentalRequest.getCarId()),
+                this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId())
         );
 
         if (rules != null) {
             return rules;
         }
 
-        var car = this.carService.getById(createRentalRequest.getCarId());
-        var findexScoreResult = this.customerService.checkIfFindexScore(createRentalRequest.getCustomerId(), car.getData().getFindexScore());
-        if (!findexScoreResult.isSuccess()) return findexScoreResult;
-
         if (createRentalRequest.getReturnCityId() > 0 && !this.cityService.checkIfCityExists(createRentalRequest.getReturnCityId()).isSuccess())
             return new ErrorResult(Messages.CITYNOTFOUND);
-        //CreditCard creditCard = CreditCard.builder().
+
+        var car = this.carService.getById(createRentalRequest.getCarId());
+        var individualCustomer = this.individualCustomerService.getById(createRentalRequest.getCustomerId());
+        var corporateCustomer = this.corporateCustomerService.getById(createRentalRequest.getCustomerId());
+
+        // Şahıs ise
+        if (individualCustomer.isSuccess()) {
+            var individualRules = BusinessRules.run(
+                    this.individualCustomerService.checkIfFindexScore(createRentalRequest.getCustomerId(), car.getData().getFindexScore()),
+                    this.checkMinYear(individualCustomer.getData().getBirthDate(), car.getData().getMinYear())
+            );
+
+            if (individualRules != null) {
+                return individualRules;
+            }
+
+        } else
+        {
+            // şirket ise
+            var corporateRules = BusinessRules.run(
+                    this.corporateCustomerService.checkIfFindexScore(createRentalRequest.getCustomerId(), car.getData().getFindexScore())
+            );
+
+            if (corporateRules != null) {
+                return corporateRules;
+            }
+        }
+
+
+        // Kiralanmak istenen aracın Müsaitliği kontrol edilir.
+        var carValidRules = BusinessRules.run(
+                this.carService.checkIfCarRental(createRentalRequest.getCarId()),
+                this.carMaintenanceService.isCarMaintenance(createRentalRequest.getCarId())
+        );
+
+        if (rules != null) {
+            // Aynı statüde müsait araç var mı? diye kontrol eklenir.
+
+
+        }
+
+
         var rental = this.modelMapperService.forRequest().map(createRentalRequest, Rental.class);
         this.rentalDao.save(rental);
         return new SuccessResult(Messages.RENTALADDSUCCESSFUL);
     }
+
+    @Override
+    public Result addIndividualCustomer(CreateRentalRequest rentalRequest) {
+        var car = this.carService.getById(rentalRequest.getCarId());
+        var customer = this.individualCustomerService.getById(rentalRequest.getCarId());
+        var rules = BusinessRules.run(
+                checkBaseControl(rentalRequest),
+                checkMinYear(customer.isSuccess() ? customer.getData().getBirthDate() : LocalDate.now(), car.isSuccess() ? car.getData().getMinYear() : 0),
+                this.individualCustomerService.checkIfFindexScore(rentalRequest.getCustomerId(), car.isSuccess() ? car.getData().getFindexScore() : 0)
+        );
+
+        if (rules != null) {
+            return rules;
+        }
+
+        return add(rentalRequest);
+    }
+
+    @Override
+    public Result addCorporateCustomer(CreateRentalRequest rentalRequest) {
+        var car = this.carService.getById(rentalRequest.getCarId());
+        var customer = this.corporateCustomerService.getById(rentalRequest.getCarId());
+        var rules = BusinessRules.run(
+                checkBaseControl(rentalRequest),
+                this.corporateCustomerService.checkIfFindexScore(rentalRequest.getCustomerId(), car.getData().getFindexScore())
+        );
+
+        if (rules != null) {
+            return rules;
+        }
+
+        return add(rentalRequest);
+    }
+
 
     @Override
     public Result update(UpdateRentalRequest updateRentalRequest) {
@@ -146,6 +230,22 @@ public class RentalManager implements RentalService {
         return this.rentalDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.RENTALNOTFOUND);
     }
 
+    @Override
+    public double getRentalTotalPrice(int rentalId) {
+        var rental = getByRentalId(rentalId);
+        if (!rental.isSuccess()) new ErrorResult(Messages.RENTALNOTFOUND);
+        //this.customerId = rental.getData().getCustomer().getId();
+
+        var day = ChronoUnit.DAYS.between(rental.getData().getRentDate(), rental.getData().getReturnDate());
+        if (day == 0)
+            day = 1;
+        double dailyPrice = rental.getData().getCar().getDailyPrice();
+
+        for (RentalExtraService rentalExtraService : rental.getData().getRentalExtraServices())
+            dailyPrice += rentalExtraService.getAdditionalService().getServicePrice();
+
+        return dailyPrice * day;
+    }
 
     @Override
     public DataResult<List<RentalListDto>> getAll() {
@@ -181,7 +281,7 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public DataResult<Rental> getByCarId(int rentalId) {
+    public DataResult<Rental> getByRentalId(int rentalId) {
         var rental = this.rentalDao.findById(rentalId);
         return rental.isPresent() ? new SuccessDataResult<Rental>(rental.get()) : new ErrorDataResult<Rental>(Messages.RENTALNOTFOUND);
     }

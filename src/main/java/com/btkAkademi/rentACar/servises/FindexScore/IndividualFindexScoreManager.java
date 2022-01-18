@@ -5,7 +5,6 @@ import java.util.Random;
 public class IndividualFindexScoreManager {
 
     public int getIndividualFindexScore(String identificationNumber) {
-        Random random = new Random();
-        return random.nextInt(650 - 1900) + 650;
+        return (int) (Math.random() * 1900 - 650 + 1) + 650;
     }
 }

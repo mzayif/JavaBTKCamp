@@ -1,11 +1,7 @@
 package com.btkAkademi.rentACar.ws.controllers;
 
-import com.btkAkademi.rentACar.business.abstracts.CityService;
 import com.btkAkademi.rentACar.business.abstracts.InvoiceService;
-import com.btkAkademi.rentACar.business.dtos.CityListDto;
 import com.btkAkademi.rentACar.business.dtos.InvoiceListDto;
-import com.btkAkademi.rentACar.business.requests.cityRequests.CreateCityRequest;
-import com.btkAkademi.rentACar.business.requests.cityRequests.UpdateCityRequest;
 import com.btkAkademi.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.btkAkademi.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -17,30 +13,36 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cities")
-public class CitiesController {
-    private final CityService cityService;
+@RequestMapping("api/invoices")
+public class InvoicesController {
+    private final InvoiceService invoiceService;
 
     @Autowired
-    public CitiesController(CityService cityService) {
-        this.cityService = cityService;
+    public InvoicesController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
+
     @GetMapping("getall")
-    public ResponseEntity<DataResult<List<CityListDto>>> getAll() {
-        return ResponseEntity.ok(cityService.getAll());
+    public ResponseEntity<DataResult<List<InvoiceListDto>>> getAll() {
+        return ResponseEntity.ok(invoiceService.getAll());
+    }
+
+    @GetMapping("getInvoiceDetail")
+    public ResponseEntity<DataResult<InvoiceListDto>> getInvoiceDetail(int rentalId) {
+        return ResponseEntity.ok(invoiceService.getInvoiceDetail(rentalId));
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody @Valid CreateCityRequest createCityRequest) {
-        var result = cityService.add(createCityRequest);
+    public ResponseEntity<?> add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) {
+        var result = invoiceService.add(createInvoiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
 
     }
 
     @PostMapping("update")
-    public ResponseEntity<?> update(@RequestBody @Valid UpdateCityRequest updateCityRequest) {
-        var result = cityService.update(updateCityRequest);
+    public ResponseEntity<?> update(@RequestBody @Valid UpdateInvoiceRequest updateInvoiceRequest) {
+        var result = invoiceService.update(updateInvoiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 }

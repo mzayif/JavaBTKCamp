@@ -15,12 +15,10 @@ import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
 import com.btkAkademi.rentACar.entities.concretes.Payment;
-import com.btkAkademi.rentACar.entities.concretes.RentalExtraService;
 import com.btkAkademi.rentACar.servises.bankServise.abstracts.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,27 +50,15 @@ public class PaymentManager implements PaymentService {
         return new ErrorResult(Messages.ALREADYPAYED);
     }
 
-    private double getRentalTotalPrice(int rentalId) {
-        var rental = this.rentalService.getByCarId(rentalId);
-        if (!rental.isSuccess()) new ErrorResult(Messages.RENTALNOTFOUND);
-        this.customerId = rental.getData().getCustomer().getId();
-
-        var day = ChronoUnit.DAYS.between(rental.getData().getRentDate(), rental.getData().getReturnDate());
-        if (day == 0)
-            day = 1;
-        double totalPrice = rental.getData().getCar().getDailyPrice() * day;
-
-        for (RentalExtraService rentalExtraService : rental.getData().getRentalExtraServices())
-            totalPrice += rentalExtraService.getAdditionalService().getServicePrice() * day;
-        return totalPrice;
-    }
-
-
-
 
     public Result add(CreatePaymentRequest createPaymentRequest) {
+
+        var rentalDataResult = this.rentalService.getByRentalId(createPaymentRequest.getRentalId());
+        if (rentalDataResult.isSuccess()) return rentalDataResult;
+
+        var rental = rentalDataResult.getData();
+
         var result = BusinessRules.run(
-                this.rentalService.checkIfRentalExists(createPaymentRequest.getRentalId()),
                 checkIfRentalPaid(createPaymentRequest.getRentalId())
         );
 
@@ -81,6 +67,9 @@ public class PaymentManager implements PaymentService {
         }
 
         var payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
+        if (rentalDataResult.getData().getInvoice() != null )
+            payment.setInvoice(rentalDataResult.getData().getInvoice());
+
         this.paymentDao.save(payment);
 
         return new SuccessResult(Messages.CREATED);
@@ -118,13 +107,11 @@ public class PaymentManager implements PaymentService {
     }
 
 
-
-
     @Override
     public Result payRental(int rentalId) {
-        double totalPrice = getRentalTotalPrice(rentalId);
+        double totalPrice = this.rentalService.getRentalTotalPrice(rentalId);
 
-        if (!this.bankService.CardValid(new BankDto("Test","32132132132","06/25","601",totalPrice), 0, 1))
+        if (!this.bankService.CardValid(new BankDto("Test", "32132132132", "06/25", "601", totalPrice), 0, 1))
             return new ErrorResult(Messages.CARDLIMITISNOTVALID);
 
         CreatePaymentRequest payment = new CreatePaymentRequest(rentalId, totalPrice);
@@ -133,12 +120,15 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public Result payRentalWithCredCard(CreatePaymentRequest createPaymentRequest) {
-        double totalPrice = getRentalTotalPrice(createPaymentRequest.getRentalId());
+        var rental = this.rentalService.getByRentalId(createPaymentRequest.getRentalId());
+        if (!rental.isSuccess()) return rental;
+
+        double totalPrice = this.rentalService.getRentalTotalPrice(createPaymentRequest.getRentalId());
 
         if (createPaymentRequest.isSaveCreditCard()) {
             var createCreditCardRequests = this.modelMapperService.forRequest().map(createPaymentRequest, CreateCreditCardRequests.class);
-            createCreditCardRequests.setCustomerId(this.customerId);
-            creditCardService.add(createCreditCardRequests) ;
+            createCreditCardRequests.setCustomerId(rental.getData().getCustomer().getId());
+            creditCardService.add(createCreditCardRequests);
         }
 
 
@@ -148,9 +138,6 @@ public class PaymentManager implements PaymentService {
         CreatePaymentRequest payment = new CreatePaymentRequest(createPaymentRequest.getRentalId(), totalPrice);
         return add(payment);
     }
-
-
-
 
 
     @Override

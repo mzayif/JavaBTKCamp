@@ -49,4 +49,5 @@ public class Messages {
     public static final String ALREADYPAYED = "Rental fee already paid";
     public static final String CARDLIMITISNOTVALID = "Card Limit is not valid";
 	public static final String FINDEXSCORENOTENOUGH = "Findex Score Not Enough";
+    public static final String MINAGENOTENOUGTH = "Min age not enough to rent a car";
 }

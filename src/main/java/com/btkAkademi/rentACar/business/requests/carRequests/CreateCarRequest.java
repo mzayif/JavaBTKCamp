@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.business.requests.carRequests;
 
+import com.btkAkademi.rentACar.business.enums.CarType;
 import com.btkAkademi.rentACar.business.requests.IRequest;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ public class CreateCarRequest implements IRequest {
     private String description;
     private int kilometer;
     private int findexScore;
+    private int minYear;
+    private CarType carType;
 
     private int brandId;
     private int colorId;
