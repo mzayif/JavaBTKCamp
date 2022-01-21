@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.btkAkademi.rentACar.business.abstracts.BrandService;
 import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
+import com.btkAkademi.rentACar.business.dtos.carDtos.CarDetailDto;
 import com.btkAkademi.rentACar.business.requests.carRequests.AvailableCar;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import org.springframework.context.annotation.Lazy;
@@ -89,7 +90,7 @@ public class CarManager implements CarService {
     @Override
     public Result delete(int id) {
         var car = this.carDao.findById(id);
-        if (!car.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+        if (!car.isPresent()) return new ErrorResult(Messages.NOTFOUND);
 
         this.carDao.delete(car.get());
         return new SuccessResult(Messages.DELETED);
@@ -105,9 +106,9 @@ public class CarManager implements CarService {
         if (car.isEmpty())
             return new ErrorResult(Messages.NOTAVAILABLE);
 
-        var availableCars = this.carDao.getAvailableCars(LocalDate.now());
-        var sameOtherCars = availableCars.stream().filter(x -> x.getId() == car.get().getId()).findFirst();
-        if (sameOtherCars.isPresent()) return new SuccessResult();
+        var availableCars = this.carDao.getAvailableCarsByCarId(LocalDate.now(), car.get().getCity().getId(), car.get().getId());
+        //var sameOtherCars = availableCars.stream().filter(x -> x.getId() == car.get().getId()).findFirst();
+        if (car != null) return new SuccessResult();
 
         return new ErrorResult(Messages.NOTAVAILABLE);
     }
@@ -129,15 +130,23 @@ public class CarManager implements CarService {
     }
 
     @Override
+    public DataResult<CarDetailDto> getOne(int id) {
+        var car = this.carDao.findById(id);
+        if (!car.isPresent()) return new ErrorDataResult<>(Messages.NOTFOUND);
+        var response = this.modelMapperService.forRequest().map(car.get(), CarDetailDto.class);
+        return new SuccessDataResult<CarDetailDto>(response, Messages.SUCCEED);
+    }
+
+    @Override
     public DataResult<Car> getById(int id) {
         var car = this.carDao.findById(id);
         return car.isPresent() ? new SuccessDataResult<Car>(car.get()) : new ErrorDataResult<Car>();
     }
 
     @Override
-    public DataResult<Car> getAvailableSameTypeCar(int carSegmentTypeId) {
+    public DataResult<Car> getAvailableSameTypeCar(int carSegmentTypeId, int cityId) {
 
-        var availableCars = this.carDao.getAvailableCars(LocalDate.now());
+        var availableCars = this.carDao.getAvailableCarsByCityId(LocalDate.now(), cityId);
         if (availableCars.size() == 0) new ErrorDataResult<Car>(Messages.NOT_AVAILABLE_OTHER_CAR);
 
         // istenen araç müsait değilse aynı segemntte başka araba kontrolü yapılacak

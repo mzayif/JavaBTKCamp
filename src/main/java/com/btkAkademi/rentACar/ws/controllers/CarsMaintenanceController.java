@@ -23,7 +23,7 @@ public class CarsMaintenanceController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateCarMaintenanceRequests createCarMaintenanceRequests) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateCarMaintenanceRequests createCarMaintenanceRequests) {
         return ResponseEntity.ok(carMaintenanceService.add(createCarMaintenanceRequests));
     }
 

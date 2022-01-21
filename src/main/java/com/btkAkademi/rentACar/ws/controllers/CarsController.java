@@ -14,6 +14,7 @@ import com.btkAkademi.rentACar.business.requests.carRequests.UpdateCarRequest;
 
 @RestController
 @RequestMapping("api/cars")
+@CrossOrigin
 public class CarsController {
     private final CarService carService;
 
@@ -24,7 +25,7 @@ public class CarsController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateCarRequest carCreateDto) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateCarRequest carCreateDto) {
         var result = carService.add(carCreateDto);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
@@ -41,6 +42,12 @@ public class CarsController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllByPage(int id) {
+        var result = carService.getOne(id);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
 
     @GetMapping("getall")
     public ResponseEntity<?> getAll() {

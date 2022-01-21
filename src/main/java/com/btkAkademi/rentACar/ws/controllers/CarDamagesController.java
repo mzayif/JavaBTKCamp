@@ -24,7 +24,7 @@ public class CarDamagesController {
 
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateCarDamagesRequest createCarDamagesRequest) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateCarDamagesRequest createCarDamagesRequest) {
         var result = carDamageService.add(createCarDamagesRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

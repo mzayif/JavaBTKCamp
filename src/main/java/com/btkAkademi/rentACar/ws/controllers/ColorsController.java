@@ -15,6 +15,7 @@ import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 
 @RestController
 @RequestMapping("api/colors")
+@CrossOrigin
 public class ColorsController {
     private final ColorService colorService;
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,10 @@ import com.btkAkademi.rentACar.business.requests.brandRequests.CreateBrandReques
 import com.btkAkademi.rentACar.business.requests.brandRequests.UpdateBrandRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 
+
 @RestController
 @RequestMapping("api/brands")
+@CrossOrigin
 public class BrandsController {
     private final BrandService brandService;
 
@@ -23,6 +26,7 @@ public class BrandsController {
     public BrandsController(BrandService brandService) {
         this.brandService = brandService;
     }
+
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreateBrandRequest brandCreateDto) {
@@ -43,8 +47,17 @@ public class BrandsController {
     }
 
 
-
     @GetMapping("getAll")
+//    @ApiOperation(
+//            value = "Returns a list of all OIDC users",
+//            response = OidcUser.class,
+//            responseContainer = "List",
+//            responseHeaders = @ResponseHeader(name = TOTAL_COUNT_HEADER, response = Long.class, description = "The total number of OIDC users")
+//    )
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 401, message = "Unauthorized")
+//    })
+//    @PermissionRequired(Permissions.Constants.ACCESS_MANAGEMENT)
     public ResponseEntity<DataResult<List<BrandListDto>>> getAll() {
         var result = brandService.getAll();
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);

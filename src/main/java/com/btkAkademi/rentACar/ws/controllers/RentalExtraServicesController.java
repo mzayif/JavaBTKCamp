@@ -22,7 +22,7 @@ public class RentalExtraServicesController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateRentalExtraServiceRequest createRentalExtraServiceRequest) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateRentalExtraServiceRequest createRentalExtraServiceRequest) {
         var result = extraService.add(createRentalExtraServiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

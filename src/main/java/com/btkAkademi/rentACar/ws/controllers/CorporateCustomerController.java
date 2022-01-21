@@ -24,7 +24,7 @@ public class CorporateCustomerController {
 
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateCorporateCustomerRequest createCorporateCustomerRequest) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateCorporateCustomerRequest createCorporateCustomerRequest) {
         var result = corporateCustomerService.add(createCorporateCustomerRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

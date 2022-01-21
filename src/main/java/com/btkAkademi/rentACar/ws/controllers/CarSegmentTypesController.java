@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/carSegmentTypes")
+@CrossOrigin
 public class CarSegmentTypesController {
     private final CarSegmentTypeService carSegmentTypeService;
 

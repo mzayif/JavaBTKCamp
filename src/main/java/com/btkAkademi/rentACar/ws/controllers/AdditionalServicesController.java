@@ -23,7 +23,7 @@ public class AdditionalServicesController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateAdditionalServiceRequest additionalServiceRequest) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateAdditionalServiceRequest additionalServiceRequest) {
         var result = additionalService.add(additionalServiceRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

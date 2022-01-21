@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CarDamageListDto implements IDto {
     private int id;
     private String description;
-    private Car car;
+    private int carId;
 }

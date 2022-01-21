@@ -21,7 +21,7 @@ public class IndividualCustomerController {
         this.individualCustomerService = individualCustomerService;
     }
     @PostMapping("add")
-    public ResponseEntity<?> add(@RequestBody CreateIndividualCustomerRequest createIndividualCustomerRequest) {
+    public ResponseEntity<?> add(@RequestBody @Valid CreateIndividualCustomerRequest createIndividualCustomerRequest) {
         var result = individualCustomerService.add(createIndividualCustomerRequest);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }

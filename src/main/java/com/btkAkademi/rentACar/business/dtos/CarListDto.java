@@ -13,4 +13,5 @@ public class CarListDto implements IDto{
 	private int modelYear;
 	private String description;
 	private int kilometer;
+	private double dailyPrice;
 }

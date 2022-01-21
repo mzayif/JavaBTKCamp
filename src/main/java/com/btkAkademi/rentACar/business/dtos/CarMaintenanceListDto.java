@@ -14,6 +14,6 @@ public class CarMaintenanceListDto implements IDto {
     private int id;
     private LocalDate sendMaintenanceDate;
     private LocalDate returnMaintenanceDate;
-    private Car car;
+    private int carId;
 }
 
