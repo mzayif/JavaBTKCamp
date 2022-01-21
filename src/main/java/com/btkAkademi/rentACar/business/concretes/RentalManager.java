@@ -131,7 +131,7 @@ public class RentalManager implements RentalService {
         var checkCar = this.carService.checkIfCarRental(createRentalRequest.getCarId());
         if (!checkCar.isSuccess()) {
             // Aynı segmentte müsait araç var mı? diye kontrol eklenir.
-            var sameTypeCars = this.carService.getAvailableSameTypeCar(car.getData().getCarSegmentType().getId());
+            var sameTypeCars = this.carService.getAvailableSameTypeCar(car.getData().getCarSegmentType().getId(), car.getData().getCity().getId());
             if (sameTypeCars.isSuccess())
                 return new ErrorResult(Messages.THIS_CAR_NOT_AVAILABLE_BUT_OTHER_THERE_CAR(sameTypeCars.getData().getId()));
 
