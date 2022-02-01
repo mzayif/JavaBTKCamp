@@ -3,6 +3,8 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.btkAkademi.rentACar.business.abstracts.BaseServices.CheckIfExistService;
+import com.btkAkademi.rentACar.core.exeptions.NotFoundException;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,44 +71,48 @@ public class BrandManager implements BrandService {
         } else if (updateBrandRequest.getName().equals(brand.get().getName())) {
             return new ErrorResult(Messages.NOUPDATEISSUED);
         }
+
         var result = BusinessRules.run(checkIfBrandExists(updateBrandRequest.getName()));
 
-        if (result != null) {
-            return result;
-        }
-        // TODO update işlemi yaz.
+        if (result != null) return result;
+
+
         brand.get().setName(updateBrandRequest.getName());
         this.brandDao.save(brand.get());
-        //this.brandDao.updateBrandNameById(updateBrandRequest.getName(), updateBrandRequest.getId());
+
         return new SuccessResult(Messages.BRANDUPDATED);
     }
 
     @Override
     public Result delete(int id) {
         var brand = this.brandDao.findById(id);
-        if (!brand.isPresent()) return new SuccessResult(Messages.NOTFOUND);
+        if (!brand.isPresent()) return new ErrorResult(Messages.NOTFOUND);
 
         this.brandDao.delete(brand.get());
         return new SuccessResult(Messages.DELETED);
     }
 
 
-
-
     @Override
-    public Result checkIfBrandExists(int id) {
-        return this.brandDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
+    public Result checkIfExists(int id) {
+        this.brandDao.findById(id).orElseThrow(() -> new NotFoundException(Messages.NOTFOUND));
+        return new SuccessResult();
     }
-
-
 
 
     @Override
     public DataResult<List<BrandListDto>> getAll() {
         var brandList = this.brandDao.findAll();
-        List<BrandListDto> response = brandList.stream()
-                .map(brand -> modelMapperService.forDto().map(brand, BrandListDto.class)).collect(Collectors.toList());
+        List<BrandListDto> response = brandList.stream().map(brand -> modelMapperService.forDto().map(brand, BrandListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<BrandListDto>>(response);
+    }
+
+    @Override
+    public DataResult<BrandListDto> get(int id) {
+        var brand = this.brandDao.findById(id);
+        if (brand.isEmpty()) return new ErrorDataResult<BrandListDto>(Messages.NOTFOUND);
+        var brandDto = this.modelMapperService.forRequest().map(brand.get(), BrandListDto.class);
+        return brand.isPresent() ? new SuccessDataResult<BrandListDto>(brandDto) : new ErrorDataResult<BrandListDto>();
     }
 
     @Override
@@ -114,5 +120,6 @@ public class BrandManager implements BrandService {
         var brand = this.brandDao.findById(id);
         return brand.isPresent() ? new SuccessDataResult<Brand>(brand.get()) : new ErrorDataResult<Brand>();
     }
+
 }
 

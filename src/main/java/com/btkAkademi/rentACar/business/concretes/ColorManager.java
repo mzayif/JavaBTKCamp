@@ -3,6 +3,7 @@ package com.btkAkademi.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.btkAkademi.rentACar.business.dtos.BrandListDto;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.entities.concretes.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class ColorManager implements ColorService {
 
 
     @Override
-    public Result checkIfColorExists(int id) {
+    public Result checkIfExists(int id) {
         return this.colorDao.findById(id).isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARNOTFOUND);
     }
 
@@ -101,6 +102,14 @@ public class ColorManager implements ColorService {
                         .map(color, ColorListDto.class))
                 .collect(Collectors.toList());
         return new SuccessDataResult<List<ColorListDto>>(response);
+    }
+
+    @Override
+    public DataResult<ColorListDto> get(int id) {
+        var color = this.colorDao.findById(id);
+        if (color.isEmpty()) return new ErrorDataResult<>(Messages.NOTFOUND);
+        var colorListDto = this.modelMapperService.forRequest().map(color.get(), ColorListDto.class);
+        return color.isPresent() ? new SuccessDataResult<ColorListDto>(colorListDto) : new ErrorDataResult<>();
     }
 
     @Override
