@@ -12,4 +12,8 @@ public class CarDamageListDto implements IDto {
     private int id;
     private String description;
     private int carId;
+    private String carPlate;
+    private String brandName;
+    private String colorName;
+    private String segmentName;
 }

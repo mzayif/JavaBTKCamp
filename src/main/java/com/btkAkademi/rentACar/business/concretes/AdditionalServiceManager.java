@@ -10,23 +10,21 @@ import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.*;
 import com.btkAkademi.rentACar.dataAccess.abstracts.AdditionalServiceDao;
 import com.btkAkademi.rentACar.entities.concretes.AdditionalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdditionalServiceManager implements AdditionalServiceService {
 
     private final AdditionalServiceDao additionalServiceDao;
     private final ModelMapperService modelMapperService;
 
-    public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapperService modelMapperService) {
-        this.additionalServiceDao = additionalServiceDao;
-        this.modelMapperService = modelMapperService;
-    }
 
-    private Result checkIfCityExists(String name) {
+    private Result checkIfCityNameExists(String name) {
         var additionalService = this.additionalServiceDao.findByServiceName(name);
         if (additionalService.isPresent()) {
             return new ErrorResult(Messages.ALREADYEXISTS);
@@ -42,7 +40,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
         var additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 
         var result = BusinessRules.run(
-                checkIfCityExists(createAdditionalServiceRequest.getServiceName())
+                checkIfCityNameExists(createAdditionalServiceRequest.getServiceName())
         );
 
         if (result != null) {

@@ -44,7 +44,7 @@ public class CarsController {
 
 
     @GetMapping("")
-    public ResponseEntity<?> getAllByPage(int id) {
+    public ResponseEntity<?> getOne(int id) {
         var result = carService.getOne(id);
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
@@ -61,4 +61,9 @@ public class CarsController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
+    @GetMapping("getAvailableCarForRent")
+    public ResponseEntity<?> getAvailableCarForRent() {
+        var result = carService.getAvailableCarForRent();
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
+    }
 }

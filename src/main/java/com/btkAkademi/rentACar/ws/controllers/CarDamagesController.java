@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/carDamages")
+@CrossOrigin
 public class CarDamagesController {
     private final CarDamageService carDamageService;
 

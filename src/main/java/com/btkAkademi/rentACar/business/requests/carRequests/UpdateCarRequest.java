@@ -19,8 +19,9 @@ public class UpdateCarRequest implements IRequest {
 	private int kilometer;
 	private int findexScore;
 	private int minYear;
-	private int carSegmentTypeId;
+	private String carPlate;
 
+	private int carSegmentTypeId;
 	private int brandId;
 	private int colorId;
 }

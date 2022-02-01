@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/carMaintenances")
+@CrossOrigin
 public class CarsMaintenanceController {
     private final CarMaintenanceService carMaintenanceService;
 
@@ -24,7 +25,8 @@ public class CarsMaintenanceController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody @Valid CreateCarMaintenanceRequests createCarMaintenanceRequests) {
-        return ResponseEntity.ok(carMaintenanceService.add(createCarMaintenanceRequests));
+        var result = carMaintenanceService.add(createCarMaintenanceRequests);
+        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
     @PutMapping("update")

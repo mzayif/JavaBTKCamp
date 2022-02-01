@@ -10,6 +10,7 @@ public class Messages {
 	public static final String ALREADYEXISTS = "Record Already Exists";
 	public static final String SUCCEED = "Succeed";
     public static final String DELETED = "Record Deleted";
+	public static final String NOUPDATEISSUED = "No information has been updated";
 
 
 	public final static String BRANDADDSUCCESSFUL = "brand.added";
@@ -28,7 +29,6 @@ public class Messages {
 	public final static String COLORADDSUCCESSFUL = "color.added";
 	public static final String INVAILABLECOLORSIZE = "color.name.invalid";
 	public static final String COLORNOTFOUND = "color.notfound";
-	public static final String NOUPDATEISSUED = "color.noupdate";
 	public static final String COLORNAMEEXISTS = "color.name.exists";
 	public static final String COLORUPDATED = "color.updated";
 

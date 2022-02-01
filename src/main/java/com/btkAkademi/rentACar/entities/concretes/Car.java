@@ -35,6 +35,8 @@ public class Car extends BaseEntity {
 	@Column(name = "kilometer")
 	private int kilometer;
 
+	@Column(name = "car_plate")
+	private String carPlate;
 
 
 //	@Column(name = "is_maintenance")

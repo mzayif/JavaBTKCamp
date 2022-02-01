@@ -204,7 +204,6 @@ public class RentalManager implements RentalService {
 
         this.rentalDao.save(rental);
         return new SuccessResult(Messages.COLORUPDATED);
-
     }
 
     @Override
@@ -220,7 +219,7 @@ public class RentalManager implements RentalService {
     @Override
     public Result isCarRented(int carId) {
         var rentCars = this.rentalDao.getOnRentCars(LocalDate.now());
-        return rentCars.isEmpty() ? new SuccessResult() : new ErrorResult(Messages.CARISRENTAL);
+        return rentCars.isPresent() ? new SuccessResult() : new ErrorResult(Messages.CARISRENTAL);
     }
 
     @Override

@@ -13,7 +13,9 @@ import java.util.Optional;
 
 @Repository
 public interface CarDao extends JpaRepository<Car, Integer> {
+
     Optional<List<Car>> findAllByCarSegmentTypeId(int carSegmentTypeId);
+    Optional<Car> findByCarPlate(String carPlate);
 
     @Query("from Car c " +
             "left join c.carMaintenances m on m.returnMaintenanceDate is null " +

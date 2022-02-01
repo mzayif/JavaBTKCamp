@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/creditCards")
+@CrossOrigin
 public class CreditCardsController {
     private final CreditCardService creditCardService;
 

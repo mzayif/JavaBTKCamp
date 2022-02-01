@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/rentals")
+@CrossOrigin
 public class RentalsController {
     private final RentalService rentalService;
 
@@ -58,11 +59,7 @@ public class RentalsController {
         return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
     }
 
-    @GetMapping("getAvailableCarForRent")
-    public ResponseEntity<?> getAvailableCarForRent() {
-        var result = rentalService.getAvailableCarForRent();
-        return result.isSuccess() ? ResponseEntity.ok(result) : ResponseEntity.badRequest().body(result);
-    }
+
 
     @GetMapping("getRentalDetail")
     public ResponseEntity<?> getRentalDetail(int rentalId) {

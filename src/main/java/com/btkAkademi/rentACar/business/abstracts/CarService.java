@@ -25,4 +25,6 @@ public interface CarService {
 	DataResult<Car> getById(int id);
 
     DataResult<Car> getAvailableSameTypeCar(int carSegmentTypeId, int cityId);
+
+    DataResult<List<CarListDto>> getAvailableCarForRent();
 }

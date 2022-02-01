@@ -99,22 +99,25 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
     @Override
     public DataResult<List<CarMaintenanceListDto>> getAll() {
-        var colorList = this.carMaintenanceDao.findAll();
-        var response = colorList.stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
+        var carMaintenanceList = this.carMaintenanceDao.findAll();
+        var response = carMaintenanceList.stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
     }
 
     @Override
     public DataResult<List<CarMaintenanceListDto>> getAllByCarId(int carId) {
-        var colorList = this.carMaintenanceDao.findAllByCarId(carId);
-        var response = colorList.stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
-        return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
+        var carMaintenanceList = this.carMaintenanceDao.findAllByCarId(carId);
+        if (carMaintenanceList.isPresent() && carMaintenanceList.get().size() > 0) {
+            var response = carMaintenanceList.get().stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
+            return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
+        }
+        return new SuccessDataResult<List<CarMaintenanceListDto>>();
     }
 
     @Override
     public DataResult<List<CarMaintenanceListDto>> getAllInActiveMaintenance() {
-        var colorList = this.carMaintenanceDao.getAllInActiveMaintenance();
-        var response = colorList.stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
+        var carMaintenanceList = this.carMaintenanceDao.getAllInActiveMaintenance();
+        var response = carMaintenanceList.stream().map(row -> modelMapperService.forDto().map(row, CarMaintenanceListDto.class)).collect(Collectors.toList());
         return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
     }
 
