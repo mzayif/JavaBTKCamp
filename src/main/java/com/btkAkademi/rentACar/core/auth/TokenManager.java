@@ -23,7 +23,7 @@ public class TokenManager implements Serializable {
                 .setIssuer("www.aska.com")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validity))
-                .signWith(SignatureAlgorithm.HS256,secretKey)
+                .signWith(key)
                 .compact();
     }
 
