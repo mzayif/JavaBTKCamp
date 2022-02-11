@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.SecurityContextConfigurer;
@@ -101,6 +102,29 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     }
 
+//    /**
+//     * Override this method to configure {@link WebSecurity}. For example, if you wish to
+//     * ignore certain requests.
+//     * <p>
+//     * Endpoints specified in this method will be ignored by Spring Security, meaning it
+//     * will not protect them from CSRF, XSS, Clickjacking, and so on.
+//     * <p>
+//     * Instead, if you want to protect endpoints against common vulnerabilities, then see
+//     * {@link #configure(HttpSecurity)} and the {@link HttpSecurity#authorizeRequests}
+//     * configuration method.
+//     *
+//     * @param web
+//     */
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/v3/api-docs",
+//                                    "/configuration/ui",
+//                                    "/swagger-resources/**",
+//                                    "/configuration/security",
+//                                    "/swagger-ui.html",
+//                                    "/webjars/**");
+//    }
+
     /**
      * Override this method to configure the {@link HttpSecurity}. Typically subclasses
      * should not invoke this method by calling super as it may override their
@@ -122,8 +146,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auths/**").permitAll()
-                .antMatchers("/swagger-ui/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
