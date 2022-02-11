@@ -11,4 +11,13 @@ public class BusinessRules {
 		}
 		return null;
 	}
+
+	public static boolean checkIfThrow(boolean... logics) {
+		for (boolean result : logics) {
+			if (!result) {
+				return result;
+			}
+		}
+		return true;
+	}
 }

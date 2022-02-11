@@ -11,6 +11,7 @@ public class Messages {
 	public static final String SUCCEED = "Succeed";
     public static final String DELETED = "Record Deleted";
 	public static final String NOUPDATEISSUED = "No information has been updated";
+	public static final String CANCELED = "Record Canceled";
 
 
 	public final static String BRANDADDSUCCESSFUL = "brand.added";
@@ -54,7 +55,7 @@ public class Messages {
     public static final String MINAGENOTENOUGTH = "Min age not enough to rent a car";
 	public static final String NOT_AVAILABLE_OTHER_CAR = "No other available car found in this segment";
 
-	public static String THIS_CAR_NOT_AVAILABLE_BUT_OTHER_THERE_CAR(int id) {
+    public static String THIS_CAR_NOT_AVAILABLE_BUT_OTHER_THERE_CAR(int id) {
 		return "The selected Car is Not Available for the specified day. But in this segment the " + id+ " car is available";
 	}
 }
